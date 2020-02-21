@@ -1,0 +1,14 @@
+{
+    "name": "Unity.Reflect.Extensions",
+    "references": [
+        "GUID:6cf67fea318af2844a952982933563b0"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}

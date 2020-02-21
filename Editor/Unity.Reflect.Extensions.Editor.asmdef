@@ -1,0 +1,18 @@
+{
+    "name": "Unity.Reflect.Extensions.Editor",
+    "references": [
+        "Unity.Reflect",
+        "Unity.Reflect.Editor",
+        "Unity.Reflect.Extensions"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}

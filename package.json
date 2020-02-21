@@ -1,0 +1,21 @@
+{
+  "name": "com.unity.reflect.extensions",
+  "displayName": "Reflect Extensions",
+  "version": "0.1.0-preview.1",
+  "unity": "2019.2",
+  "description": "Runtime components and Editor tools to make the most of Unity Reflect.",
+  "dependencies": {
+    "com.unity.reflect": "1.0.0-preview.19"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Unity-Technologies/reflect.extensions.git"
+  },
+  "samples": [
+    {
+      "displayName": "Material Remapping",
+      "description": "Example of Materials replacement at Runtime.",
+      "path": "Samples/MaterialsRemapping"
+    }
+  ]
+}
