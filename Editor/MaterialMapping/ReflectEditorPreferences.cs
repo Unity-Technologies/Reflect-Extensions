@@ -1,13 +1,14 @@
 ﻿#define USE_UI_ELEMENTS
 using System.Collections.Generic;
+using UnityEngine.Reflect.Extensions.MaterialMapping;
 #if USE_UI_ELEMENTS
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 #endif
 
-namespace UnityEditor.Reflect.Extensions
+namespace UnityEditor.Reflect.Extensions.MaterialMapping
 {
-    public static class ReflectEditorPreferences
+    internal static class ReflectEditorPreferences
     {
         public static bool autoExtractMaterialsOnImport
         {
@@ -44,11 +45,17 @@ namespace UnityEditor.Reflect.Extensions
             get => (SyncPrefabScriptedImporterHelpers.MaterialConversion)EditorPrefs.GetInt("Reflect:extractedMaterialsConverionMethod", 0);
             private set => EditorPrefs.SetInt("Reflect:extractedMaterialsConverionMethod", (int)value);
         }
-        
+
+        public static MaterialsOverride.MatchType materialSearchMatchType
+        {
+            get => (MaterialsOverride.MatchType)EditorPrefs.GetInt("Reflect:materialSearchMatchType", 0);
+            private set => EditorPrefs.SetInt("Reflect:materialSearchMatchType", (int)value);
+        }
+
         [SettingsProvider]
         public static SettingsProvider ReflectSettingsProvider()
         {
-            var provider = new SettingsProvider("Preferences/Reflect/Materials", SettingsScope.User) // PROJECT OR EDITOR PREFS ?
+            var provider = new SettingsProvider("Preferences/Reflect/Materials", SettingsScope.User) // TODO : move to Project Settings ?
             {
                 label = "Materials",
 #if !USE_UI_ELEMENTS
@@ -76,7 +83,7 @@ namespace UnityEditor.Reflect.Extensions
                 {
                     var title = new Label()
                     {
-                        text = "Extraction Settings",
+                        text = "Extraction Settings"
                     };
                     title.AddToClassList("title");
                     rootElement.Add(title);
@@ -95,7 +102,7 @@ namespace UnityEditor.Reflect.Extensions
                     var dontExtractRemappedMats_tgl = new Toggle()
                     {
                         label = "Skip Remapped Materials",
-                        value = dontExtractRemappedMaterials,
+                        value = dontExtractRemappedMaterials
                     };
                     dontExtractRemappedMats_tgl.RegisterValueChangedCallback(v => dontExtractRemappedMaterials = v.newValue);
                     dontExtractRemappedMats_tgl.AddToClassList("property-value");
@@ -113,7 +120,7 @@ namespace UnityEditor.Reflect.Extensions
                     var convertExtractedMaterials_tgl = new Toggle()
                     {
                         label = "Convert Extracted Materials",
-                        value = convertExtractedMaterials,
+                        value = convertExtractedMaterials
                     };
                     convertExtractedMaterials_tgl.RegisterValueChangedCallback(v => { convertExtractedMaterials = v.newValue; materialConversion_sel.SetEnabled(v.newValue); });
                     convertExtractedMaterials_tgl.AddToClassList("property-value");
@@ -122,7 +129,7 @@ namespace UnityEditor.Reflect.Extensions
                     var assignRemaps_tgl = new Toggle()
                     {
                         label = "Assign Material Remaps",
-                        value = autoAssignRemapsOnExtract,
+                        value = autoAssignRemapsOnExtract
                     };
                     assignRemaps_tgl.RegisterValueChangedCallback(v => autoAssignRemapsOnExtract = v.newValue);
                     assignRemaps_tgl.AddToClassList("property-value");
@@ -131,7 +138,7 @@ namespace UnityEditor.Reflect.Extensions
                     var autoExtractPath_tf = new TextField()
                     {
                         label = "Auto Extract Materials to",
-                        value = autoExtractRelativePath,
+                        value = autoExtractRelativePath
                     };
                     autoExtractPath_tf.RegisterValueChangedCallback(v => autoExtractRelativePath = v.newValue);
                     autoExtractPath_tf.AddToClassList("property-value");
@@ -140,10 +147,19 @@ namespace UnityEditor.Reflect.Extensions
                     var autoExtract_tgl = new Toggle()
                     {
                         label = "Auto Extract Materials on Import",
-                        value = autoExtractMaterialsOnImport,
+                        value = autoExtractMaterialsOnImport
                     };
                     autoExtract_tgl.RegisterValueChangedCallback(v => { autoExtractMaterialsOnImport = v.newValue; autoExtractPath_tf.SetEnabled(v.newValue); });
                     autoExtract_tgl.AddToClassList("property-value");
+
+                    // MATERIAL SEARCH MATCH TYPE
+                    var materialSearchMatchType_sel = new EnumField(materialSearchMatchType)
+                    {
+                        label = "Material Search Match Type",
+                        tooltip = "Method to match found Materials Names(A) with Mapping Names(B)."
+                    };
+                    materialSearchMatchType_sel.RegisterValueChangedCallback(v => materialSearchMatchType = (MaterialsOverride.MatchType)v.newValue);
+                    materialSearchMatchType_sel.AddToClassList("property-value");
 
                     // ADDING PROPERTIES
                     properties.Add(dontExtractRemappedMats_tgl);
@@ -154,6 +170,7 @@ namespace UnityEditor.Reflect.Extensions
                     properties.Add(autoExtract_tgl);
                     properties.Add(autoExtractPath_tf);
                     autoExtractPath_tf.SetEnabled(autoExtractMaterialsOnImport);
+                    properties.Add(materialSearchMatchType_sel);
                 },
 #endif
                 keywords = new HashSet<string>(new[] { "Material", "Mapping" })

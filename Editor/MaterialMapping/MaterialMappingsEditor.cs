@@ -2,9 +2,9 @@
 using UnityEngine;
 using System.IO;
 using System.Linq;
-using UnityEngine.Reflect.Extensions;
+using UnityEngine.Reflect.Extensions.MaterialMapping;
 
-namespace UnityEditor.Reflect.Extensions
+namespace UnityEditor.Reflect.Extensions.MaterialMapping
 {
     [CustomEditor(typeof(MaterialMappings))]
     public class MaterialMappingsEditor : Editor

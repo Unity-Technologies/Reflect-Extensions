@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace UnityEngine.Reflect.Extensions
+namespace UnityEngine.Reflect.Extensions.MaterialMapping
 {
     /// <summary>
     /// A ScriptableObject to store Materials (Re)Mappings as a separate asset.

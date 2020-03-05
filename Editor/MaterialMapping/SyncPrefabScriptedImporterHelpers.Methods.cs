@@ -1,43 +1,67 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Reflect.Extensions;
+using UnityEngine.Reflect.Extensions.MaterialMapping;
+using System.Linq;
 
-namespace UnityEditor.Reflect.Extensions
+namespace UnityEditor.Reflect.Extensions.MaterialMapping
 {
-    public static class SyncPrefabScriptedImporterHelpers
+    internal static partial class SyncPrefabScriptedImporterHelpers
     {
-        [MenuItem("Assets/Reflect/Apply Generic Mappings")]
-        static void AssignMaterialRemapsToSelection()
+        static void FindMaterialsForSyncPrefabImporter(string assetPath)
         {
-            AssignMaterialRemaps(AssetDatabase.GUIDToAssetPath(Selection.assetGUIDs[0]));
+            var importer = (SyncPrefabScriptedImporter)AssetImporter.GetAtPath(assetPath);
+            if (importer)
+                FindMaterialsForSyncPrefabImporter(importer);
         }
 
-        //[MenuItem("Assets/Reflect/Sort Mappings")] // UNDONE : sorting remaps seems to cause problems
-        static void SortSelectedRemaps()
+        internal static void FindMaterialsForSyncPrefabImporter(SyncPrefabScriptedImporter importer)
         {
-            SortRemaps(AssetDatabase.GUIDToAssetPath(Selection.assetGUIDs[0]));
-        }
+            var targetPath = EditorUtility.OpenFolderPanel(
+            "Pick Materials Location",
+            Application.dataPath,
+            "");
 
-        [MenuItem("Assets/Reflect/Reset Mappings")]
-        static void ResetSelectedRemaps()
-        {
-            ResetRemaps(AssetDatabase.GUIDToAssetPath(Selection.assetGUIDs[0]));
-        }
+            if (targetPath == string.Empty)
+                return;
 
-        [MenuItem("Assets/Reflect/Extract Materials")]
-        static void ExtractMaterialsFromSelectedSyncPrefabImporter()
-        {
-            ExtractMaterialsFromSyncPrefabImporter(AssetDatabase.GUIDToAssetPath(Selection.assetGUIDs[0]));
-        }
+            // issue error if path is outside of Project's Assets
+            if (!targetPath.StartsWith(Application.dataPath))
+            {
+                Debug.LogError("Cannot save materials outside of project's assets folder!");
+                return;
+            }
+            targetPath = "Assets" + targetPath.Substring(Application.dataPath.Length);
 
-        [MenuItem("Assets/Reflect/Apply Generic Mappings", true)]
-        [MenuItem("Assets/Reflect/Sort Mappings", true)]
-        [MenuItem("Assets/Reflect/Reset Mappings", true)]
-        [MenuItem("Assets/Reflect/Extract Materials", true)]
-        static bool SelectionFirstGuidIsSyncPrefabScriptedImporter()
-        {
-            return Selection.assetGUIDs.Length == 1 &&
-                AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(Selection.assetGUIDs[0]))?.GetType() == typeof(SyncPrefabScriptedImporter);
+            var materialsGUIDS = AssetDatabase.FindAssets("t:Material", new string[1] { targetPath });
+            var materials = new Dictionary<string, Material>();
+            foreach (string guid in materialsGUIDS)
+            {
+                var mat = AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(guid));
+                if (mat)
+                    materials.Add(mat.name, mat);
+            }
+            var remaps = new Dictionary<string, Material>();
+            importer.GetRemaps(out remaps);
+            switch(ReflectEditorPreferences.materialSearchMatchType)
+            {
+                case MaterialsOverride.MatchType.A_Equals_B:
+                    foreach (KeyValuePair<string, Material> kvp in materials)
+                    {
+                        if (remaps.ContainsKey(kvp.Key) && remaps[kvp.Key] == null) // TODO : add an option to override existing materials ?
+                            remaps[kvp.Key] = kvp.Value;
+                    }
+                    break;
+                default:
+                    var remapsNames = remaps.Keys.ToList();
+                    foreach (KeyValuePair<string, Material> kvp_m in materials)
+                    {
+                        foreach (string r in remapsNames)
+                            if (MaterialsOverride.Match(kvp_m.Key, r, ReflectEditorPreferences.materialSearchMatchType) && remaps[r] == null)
+                                remaps[r] = kvp_m.Value;
+                    }
+                    break;
+            }
+            importer.SetRemaps(remaps);
         }
 
         static void ExtractMaterialsFromSyncPrefabImporter(string assetPath)
@@ -47,12 +71,15 @@ namespace UnityEditor.Reflect.Extensions
                 ExtractMaterialsFromSyncPrefabImporter(importer);
         }
 
-        static void ExtractMaterialsFromSyncPrefabImporter(SyncPrefabScriptedImporter importer)
+        internal static void ExtractMaterialsFromSyncPrefabImporter(SyncPrefabScriptedImporter importer)
         {
             var targetPath = EditorUtility.SaveFolderPanel(
             "Save Extracted Materials",
             Application.dataPath,
             "");
+            
+            if (targetPath == string.Empty)
+                return;
 
             // issue error if path is outside of Project's Assets
             if (!targetPath.StartsWith(Application.dataPath))
@@ -66,6 +93,29 @@ namespace UnityEditor.Reflect.Extensions
             importer.ExtractMaterials(targetPath, ReflectEditorPreferences.dontExtractRemappedMaterials, ReflectEditorPreferences.autoAssignRemapsOnExtract, postAction);
         }
 
+        internal static void ExtractMaterialFromSyncPrefabImporter(SyncPrefabScriptedImporter importer, int materialIndex)
+        {
+            var materialName = importer.GetRemapNames()[materialIndex];
+            var targetPath = EditorUtility.SaveFilePanel(
+            "Save Extracted Material as",
+            Application.dataPath,
+            materialName, "mat");
+
+            if (targetPath == string.Empty)
+                return;
+
+            // issue error if path is outside of Project's Assets
+            if (!targetPath.StartsWith(Application.dataPath))
+            {
+                Debug.LogError("Cannot save materials outside of project's assets folder!");
+                return;
+            }
+            targetPath = "Assets" + targetPath.Substring(Application.dataPath.Length);
+
+            System.Action<Material> postAction = ReflectEditorPreferences.convertExtractedMaterials ? materialConversions[(int)ReflectEditorPreferences.extractedMaterialsConverionMethod] : null;
+            importer.ExtractMaterial(materialName, targetPath, ReflectEditorPreferences.dontExtractRemappedMaterials, ReflectEditorPreferences.autoAssignRemapsOnExtract, postAction);
+        }
+
         static void SortRemaps(string assetPath)
         {
             var importer = (SyncPrefabScriptedImporter)AssetImporter.GetAtPath(assetPath);
@@ -73,7 +123,7 @@ namespace UnityEditor.Reflect.Extensions
                 SortRemaps(importer);
         }
 
-        static void SortRemaps(SyncPrefabScriptedImporter importer)
+        internal static void SortRemaps(SyncPrefabScriptedImporter importer)
         {
             importer.SortRemaps();
         }
@@ -85,7 +135,7 @@ namespace UnityEditor.Reflect.Extensions
                 ResetRemaps(importer);
         }
 
-        static void ResetRemaps(SyncPrefabScriptedImporter importer)
+        internal static void ResetRemaps(SyncPrefabScriptedImporter importer)
         {
             // disabling auto extract for next import
             var auto = ReflectEditorPreferences.autoExtractMaterialsOnImport;
@@ -145,19 +195,5 @@ namespace UnityEditor.Reflect.Extensions
                 importer.SetRemaps(remaps);
             }
         }
-
-        public enum MaterialConversion : int
-        {
-            ReflectToStandard = 0
-        }
-
-        // TODO : implement other material conversions (URP, HDRP).
-        internal static System.Action<Material>[] materialConversions = new System.Action<Material>[1] {
-            new System.Action<Material>((m) => {
-                bool isTransparent = m.shader.name == "UnityReflect/Standard Transparent";
-                m.shader = isTransparent ? Shader.Find("Standard (Specular setup)") : Shader.Find("Standard");
-                m.SetFloat("_Mode", isTransparent ? 3.0f : 0.0f);
-            })
-        };
     }
 }

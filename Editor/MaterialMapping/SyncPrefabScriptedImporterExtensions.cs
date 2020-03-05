@@ -4,7 +4,7 @@ using System.Linq;
 using System.IO;
 using System;
 
-namespace UnityEditor.Reflect.Extensions
+namespace UnityEditor.Reflect.Extensions.MaterialMapping
 {
     /// <summary>
     /// Extensions for SyncPrefabScriptedImporter class to read/write MaterialRemaps
@@ -110,23 +110,28 @@ namespace UnityEditor.Reflect.Extensions
         {
             var so = new SerializedObject(syncPrefabImporter);
 
-            var remaps = new Dictionary<string, Material>();
             var sourceRemaps = so.FindProperty("m_MaterialRemaps");
+            var unsortedList = new List<string>();
 
             for (int i = 0; i < sourceRemaps.arraySize; i++)
             {
                 SerializedProperty item = sourceRemaps.GetArrayElementAtIndex(i);
-                remaps.Add(item.FindPropertyRelative("syncMaterialName").stringValue, (Material)item.FindPropertyRelative("remappedMaterial").objectReferenceValue);
+                unsortedList.Add(item.FindPropertyRelative("syncMaterialName").stringValue);
             }
 
-            var list = remaps.Keys.ToList();
-            list.Sort();
+            var sortedList = new List<string>(unsortedList);
+            sortedList.Sort();
 
-            for (int i = 0; i < list.Count; i++)
+            for (int destinationIndex = 0; destinationIndex < sortedList.Count; destinationIndex++)
             {
-                SerializedProperty item = sourceRemaps.GetArrayElementAtIndex(i);
-                item.FindPropertyRelative("syncMaterialName").stringValue = list[i];
-                item.FindPropertyRelative("remappedMaterial").objectReferenceValue = remaps[list[i]];
+                var sourceIndex = unsortedList.FindIndex(x => x == sortedList[destinationIndex]);
+                sourceRemaps.MoveArrayElement(sourceIndex, destinationIndex) ;
+                
+                var item = unsortedList[sourceIndex];
+                unsortedList.RemoveAt(sourceIndex);
+                if (destinationIndex > sourceIndex)
+                    destinationIndex--;
+                unsortedList.Insert(destinationIndex, item);
             }
 
             so.ApplyModifiedProperties();
@@ -181,6 +186,56 @@ namespace UnityEditor.Reflect.Extensions
                         materials.Add(m);
         }
 
+        public static void ExtractMaterial(this SyncPrefabScriptedImporter syncPrefabImporter, string materialName, string targetPath, bool bypassRemappedMaterials = true, bool assignRemaps = false, Action<Material> postExtractAction = null)
+        {
+            // TODO : implement single material extraction
+            if (targetPath.Length != 0)
+            {
+                // getting existing remaps
+                var existingRemaps = new Dictionary<string, Material>();
+                syncPrefabImporter.GetRemaps(out existingRemaps);
+
+                // initializing new remaps
+                var extractedRemaps = new Dictionary<string, Material>();
+
+                // getting all materials from imported objects
+                var materials = new List<Material>();
+                syncPrefabImporter.GetImportedMaterials(out materials);
+
+                // find material index // TODO : sorting materials by remaps order ?
+                var index = materials.FindIndex(m => m.name == materialName);
+
+                if (bypassRemappedMaterials && existingRemaps.ContainsValue(materials[index]))
+                    return;
+
+                // duplicating material to destination
+                var sourceName = materials[index].name;
+                Material mCopy = new Material(materials[index]);
+                postExtractAction?.Invoke(mCopy);
+                AssetDatabase.CreateAsset(mCopy, targetPath);
+                extractedRemaps.Add(sourceName, mCopy);
+
+                // saving new materials
+                AssetDatabase.SaveAssets();
+
+                if (assignRemaps)
+                {
+                    var newRemaps = new Dictionary<string, Material>();
+
+                    // mixing existing and extracted remaps
+                    foreach (KeyValuePair<string, Material> kvp in existingRemaps)
+                    {
+                        if (kvp.Value == null && extractedRemaps.ContainsKey(kvp.Key))
+                            newRemaps[kvp.Key] = extractedRemaps[kvp.Key];
+                        else
+                            newRemaps[kvp.Key] = existingRemaps[kvp.Key];
+                    }
+
+                    syncPrefabImporter.SetRemaps(newRemaps);
+                }
+            }
+        }
+
         /// <summary>
         /// Extracts Imported Materials and assigns Remaps.
         /// </summary>
@@ -204,7 +259,7 @@ namespace UnityEditor.Reflect.Extensions
                 var materials = new List<Material>();
                 syncPrefabImporter.GetImportedMaterials(out materials);
 
-                // duplicating materials to desitnation
+                // duplicating materials to destination
                 foreach (Material m in materials)
                 {
                     if (bypassRemappedMaterials && existingRemaps.ContainsValue(m))

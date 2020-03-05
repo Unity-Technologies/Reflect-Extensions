@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.IO;
 
-namespace UnityEditor.Reflect.Extensions
+namespace UnityEditor.Reflect.Extensions.MaterialMapping
 {
     public class SyncPrefabScriptedImporterPostProcessor : AssetPostprocessor
     {
