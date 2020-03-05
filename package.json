@@ -5,7 +5,9 @@
   "unity": "2019.2",
   "description": "Runtime components and Editor tools to make the most of Unity Reflect.",
   "dependencies": {
-    "com.unity.reflect": "1.0.0-preview.19"
+    "com.unity.reflect": "1.0.0-preview.19",
+    "com.unity.cinemachine": "2.5.0",
+    "com.unity.timeline": "1.1.0"
   },
   "repository": {
     "type": "git",
