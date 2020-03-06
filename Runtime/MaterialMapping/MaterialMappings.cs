@@ -6,7 +6,7 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
     /// <summary>
     /// A ScriptableObject to store Materials (Re)Mappings as a separate asset.
     /// </summary>
-    [CreateAssetMenu(fileName = "new MaterialMappings.asset", menuName = "Reflect/MaterialMappings")]
+    [CreateAssetMenu(fileName = "new MaterialMappings.asset", menuName = "Reflect/Materials/Mappings")]
     public class MaterialMappings : ScriptableObject
     {
         /// <summary>

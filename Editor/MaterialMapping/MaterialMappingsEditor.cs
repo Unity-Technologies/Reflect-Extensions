@@ -108,7 +108,7 @@ namespace UnityEditor.Reflect.Extensions.MaterialMapping
     /// </summary>
     public static class ReflectMaterialRemapperFactory
     {
-        [MenuItem("Assets/Create/Reflect/MaterialMappings (from selected Materials)")]
+        [MenuItem("Assets/Create/Reflect/Materials/Mappings (from selected Materials)")]
         public static void CreateFromMaterialSelection()
         {
             var guids = Selection.assetGUIDs;
@@ -146,13 +146,13 @@ namespace UnityEditor.Reflect.Extensions.MaterialMapping
             }
         }
 
-        [MenuItem("Assets/Create/Reflect/MaterialMappings (from selected Materials)", true)]
+        [MenuItem("Assets/Create/Reflect/Materials/Mappings (from selected Materials)", true)]
         public static bool CreateFromMaterialSelection_Validate()
         {
             return (Selection.assetGUIDs.Length > 0 && AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(Selection.assetGUIDs[0])) != null);
         }
 
-        [MenuItem("Assets/Create/Reflect/MaterialMappings (from selected SyncPrefab Importers)")]
+        [MenuItem("Assets/Create/Reflect/Materials/Mappings (from selected SyncPrefab Importers)")]
         public static void CreateFromSyncPrefabScriptedImporter()
         {
             var guids = Selection.assetGUIDs;
@@ -176,7 +176,7 @@ namespace UnityEditor.Reflect.Extensions.MaterialMapping
             }
         }
 
-        [MenuItem("Assets/Create/Reflect/MaterialMappings (from selected SyncPrefab Importers)", true)]
+        [MenuItem("Assets/Create/Reflect/Materials/Mappings (from selected SyncPrefab Importers)", true)]
         public static bool CreateFromSyncPrefabScriptedImporter_Validate()
         {
             return (Selection.assetGUIDs.Length > 0 &&

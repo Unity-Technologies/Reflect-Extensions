@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace UnityEditor.Reflect.Extensions
+namespace UnityEditor.Reflect.Extensions.AssetBundles
 {
     public class CreateAssetBundles
     {
