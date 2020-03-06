@@ -3,7 +3,8 @@
     "references": [
         "Unity.Reflect",
         "Unity.Reflect.Editor",
-        "Unity.Reflect.Extensions"
+        "Unity.Reflect.Extensions",
+        "Unity.XR.ARSubsystems"
     ],
     "includePlatforms": [
         "Editor"
