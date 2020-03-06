@@ -1,0 +1,47 @@
+.unity-base-text-field {
+    height:16px;
+}
+
+.unity-scroll-view {
+    flex:1 0 0;
+}
+
+.unity-box {
+    flex:1 0 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.unity-popup-window {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 12px;
+}
+
+.md-value {
+    flex-direction: row;
+    justify-content: space-between;
+    align-self: stretch;
+}
+
+.md-value:hover {
+    background-color: #222;
+}
+
+.md-value:focus {
+    background-color: #229;
+}
+
+#checkbox:checked {
+    opacity: 0.5;
+}
+
+.md-value .highlight .unity-label {
+    color: #159;
+}
+
+.highlight {
+    color: #09F;
+}
