@@ -6,7 +6,7 @@ namespace UnityEngine.Reflect.Extensions
     /// <summary>
     /// Example of handling AR image tracking in the scene - what to do when tracking is found and lost, when entering and exiting AR, how to handle UI elements, etc.
     /// This particular example uses the image name of the found tracked image to then drive to which location the session origin is moved.
-    /// The image can be either on a horizontal or vertical surface. The image name matches that of the one used in the Reference Image Library.
+    /// The image can be either on a horizontal or vertical surfaces. The image name matches that of the one used in the Reference Image Library.
     /// </summary>
     /// <remarks>The System.ComponentModel.Description attribute is used to describe this handler in the Image Tracking Manager editor.
     /// Start this Image Tacking Handler by calling the StartHandlingAR public method.</remarks>
@@ -104,8 +104,8 @@ namespace UnityEngine.Reflect.Extensions
                                 targetLocation.transform.eulerAngles.x, trackedImage.transform.eulerAngles.y, targetLocation.transform.eulerAngles.z));
                             sessionOrigin.MakeContentAppearAt(targetLocation.transform, trackedImage.transform.position, newRotation);
                         }
-                        // On a vertical surface
-                        else if (targetLocation.transform.forward.y > 0.95f)
+                        // On an angled surface
+                        else
                         {
                             // Rotate into the vertical plane
                             sessionOrigin.transform.rotation = Quaternion.AngleAxis(90, targetLocation.transform.right) * targetLocation.transform.rotation;
