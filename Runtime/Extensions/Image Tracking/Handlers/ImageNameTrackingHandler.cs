@@ -104,8 +104,8 @@ namespace UnityEngine.Reflect.Extensions
                                 targetLocation.transform.eulerAngles.x, trackedImage.transform.eulerAngles.y, targetLocation.transform.eulerAngles.z));
                             sessionOrigin.MakeContentAppearAt(targetLocation.transform, trackedImage.transform.position, newRotation);
                         }
-                        // On an angled surface
-                        else
+                        // On a vertical surface
+                        else if (targetLocation.transform.forward.y > 0.95f)
                         {
                             // Rotate into the vertical plane
                             sessionOrigin.transform.rotation = Quaternion.AngleAxis(90, targetLocation.transform.right) * targetLocation.transform.rotation;
