@@ -10,6 +10,29 @@ namespace UnityEngine.Reflect.Extensions
 	public static class BoundsExtentions
 	{
 		/// <summary>
+		/// Converts the SyncBoundingBox to Bounds
+		/// </summary>
+		/// <param name="syncBoundingBox"></param>
+		/// <returns></returns>
+		public static Bounds ToBounds (this SyncBoundingBox syncBoundingBox)
+		{
+			Bounds bounds = new Bounds();
+			bounds.min = syncBoundingBox.Min;
+			bounds.max = syncBoundingBox.Max;
+			return bounds;
+		}
+
+		/// <summary>
+		/// Converts the Bounds to SyncBoundingBox
+		/// </summary>
+		/// <param name="bounds"></param>
+		/// <returns></returns>
+		public static SyncBoundingBox ToSyncBoundingBox (this Bounds bounds)
+		{
+			return new SyncBoundingBox(bounds.min, bounds.max);
+		}
+
+		/// <summary>
 		/// Grows the Bounds to fit the SyncBoundingBox
 		/// </summary>
 		/// <param name="bounds"></param>
