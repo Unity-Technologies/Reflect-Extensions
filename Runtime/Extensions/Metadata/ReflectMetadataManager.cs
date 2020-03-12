@@ -234,7 +234,7 @@ namespace UnityEngine.Reflect.Extensions
         {
             if (!notifyRootDictionary.ContainsKey(observer))
             {
-                if (searchParameters != null && !string.IsNullOrEmpty(searchParameters.parameter) && !string.IsNullOrEmpty(searchParameters.value))
+                if (!string.IsNullOrEmpty(searchParameters.parameter) && !string.IsNullOrEmpty(searchParameters.value))
                     notifyRootDictionary.Add(observer, searchParameters);
                 else
                     Debug.LogError("Was not able to add Reflect Root observer since the search parameters were empty or null.");
@@ -262,7 +262,7 @@ namespace UnityEngine.Reflect.Extensions
         {
             if (!notifySyncObjectDictionary.ContainsKey(observer))
             {
-                if (searchParameters != null && !string.IsNullOrEmpty(searchParameters.parameter) && !string.IsNullOrEmpty(searchParameters.value))
+                if (!string.IsNullOrEmpty(searchParameters.parameter) && !string.IsNullOrEmpty(searchParameters.value))
                     notifySyncObjectDictionary.Add(observer, searchParameters);
                 else
                     Debug.LogError("Was not able to add Sync Object observer since the search parameters were empty or null.");
@@ -286,7 +286,7 @@ namespace UnityEngine.Reflect.Extensions
     /// <summary>
     /// Object for passing Metadata search parameters and values to the ReflectMetadataManager
     /// </summary>
-    public class MetadataSearch
+    public struct MetadataSearch
     {
         /// <summary>
         /// Parameter to search on
