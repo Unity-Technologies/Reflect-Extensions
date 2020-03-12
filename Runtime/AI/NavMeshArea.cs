@@ -1,4 +1,5 @@
-﻿using UnityEngine.Reflect.Extensions.Rules.Advanced;
+﻿using System.Collections.Generic;
+using UnityEngine.Reflect.Extensions.Rules;
 
 // int waterMask = 1 << NavMesh.GetAreaFromName("water");
 
@@ -10,6 +11,6 @@ namespace UnityEngine.Reflect.Extensions.AI
 		public int area = 0; // TODO : add a custom inspector to populate an enum from areas if possible
 		[Header("Rules")]
 		[Tooltip("Filter objects by Metadata Key/Value")]
-		public Criteria[] filters = new Criteria[1] { new Criteria("Category", "Floor") };
+		public List<SearchCriteria> filters = new List<SearchCriteria> { new SearchCriteria("Category", "Floor") };
 	}
 }

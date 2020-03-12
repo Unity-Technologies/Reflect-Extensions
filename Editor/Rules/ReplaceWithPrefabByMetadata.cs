@@ -2,9 +2,9 @@
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Reflect;
-using UnityEngine.Reflect.Extensions;
+using UnityEngine.Reflect.Extensions.Rules;
 
-namespace UnityEditor.Reflect.Extensions
+namespace UnityEditor.Reflect.Extensions.Rules
 {
 	public class ReplaceWithPrefabByMetadata : EditorWindow
 	{

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace UnityEngine.Reflect.Extensions
+namespace UnityEngine.Reflect.Extensions.Rules
 {
 	/// <summary>
 	/// Some Metadata extensions to find matches
@@ -8,16 +8,20 @@ namespace UnityEngine.Reflect.Extensions
 	public static class MetadataExtentions
 	{
 		/// <summary>
-		/// 
+		/// Returns true if Metadata contains matches all search criterias.
 		/// </summary>
 		/// <param name="md"></param>
-		/// <param name="criterias"></param>
+		/// <param name="criterias">A list of Search Criterias</param>
 		/// <returns></returns>
 		public static bool MatchAllCriterias(this Metadata md, List<SearchCriteria> criterias)
 		{
-			foreach (SearchCriteria criteria in criterias)
+			if (criterias.Count == 0)
+				return false; // return false in case of empty criterias
+
+			var parameters = md.GetParameters();
+			for (int i = 0; i < criterias.Count; i++)
 			{
-				if (md.parameters.dictionary.ContainsKey(criteria.key) && md.parameters.dictionary[criteria.key].value == criteria.value)
+				if (parameters.ContainsKey(criterias[i].key) && md.parameters.dictionary[criterias[i].key].value == criterias[i].value)
 					continue;
 				else
 					return false;
@@ -26,19 +30,21 @@ namespace UnityEngine.Reflect.Extensions
 		}
 
 		/// <summary>
-		/// 
+		/// Returns true if Metadata contains matches any search criterias.
 		/// </summary>
 		/// <param name="md"></param>
-		/// <param name="criterias"></param>
+		/// <param name="criterias">A list of Search Criterias</param>
 		/// <returns></returns>
 		public static bool MatchAnyCriterias(this Metadata md, List<SearchCriteria> criterias)
 		{
-			foreach (SearchCriteria criteria in criterias)
+			if (criterias.Count == 0)
+				return false; // return false in case of empty criterias
+
+			var parameters = md.GetParameters();
+			for (int i = 0; i < criterias.Count; i++)
 			{
-				if (md.parameters.dictionary.ContainsKey(criteria.key) && md.parameters.dictionary[criteria.key].value == criteria.value)
+				if (parameters.ContainsKey(criterias[i].key) && md.parameters.dictionary[criterias[i].key].value == criterias[i].value)
 					return true;
-				else
-					continue;
 			}
 			return false;
 		}
