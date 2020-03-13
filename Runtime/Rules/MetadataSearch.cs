@@ -80,6 +80,29 @@ namespace UnityEngine.Reflect.Extensions.Rules.Advanced
 			return objects;
 		}
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="criterias"></param>
+		/// <param name="matchAny"></param>
+		public MetadataSearch (List<SearchCriteria> criterias, bool matchAny)
+		{
+			_criterias = criterias;
+			_matchAny = matchAny;
+		}
+
+		/// <summary>
+		/// Find all Metadata in Scene matching search criterias
+		/// </summary>
+		/// <param name="criterias"></param>
+		/// <param name="matchAny"></param>
+		/// <returns></returns>
+		public static List<Metadata> FindMetadataInScene(List<SearchCriteria> criterias, bool matchAny)
+		{
+			var search = new MetadataSearch(criterias, matchAny);
+			return search.FindMatchesInScene();
+		}
+
 #if UNITY_EDITOR
 		[UnityEditor.MenuItem("Assets/Reflect/Rules/Select Objects in Scene")]
 		static void FindObjectsInScene()
