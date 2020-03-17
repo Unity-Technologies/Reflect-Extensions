@@ -32,6 +32,11 @@
         void ARCapabilty(bool arSupported)
         {
             gameObject.SetActive(arSupported);
+            if (imageNameTrackingHandler == null || !imageNameTrackingHandler.enabled)
+            {
+                if (button != null)
+                    button.interactable = false;
+            }
         }
 
         /// <summary>
