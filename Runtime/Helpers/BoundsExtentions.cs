@@ -17,9 +17,9 @@ namespace UnityEngine.Reflect.Extensions
 		public static Bounds ToBounds (this SyncBoundingBox syncBoundingBox)
 		{
 			Bounds bounds = new Bounds();
-			bounds.min = syncBoundingBox.Min;
-			bounds.max = syncBoundingBox.Max;
-			return bounds;
+			bounds.min = new Vector3 (syncBoundingBox.Min.X, syncBoundingBox.Min.Y, syncBoundingBox.Min.Z);
+			bounds.max = new Vector3(syncBoundingBox.Max.X, syncBoundingBox.Max.Y, syncBoundingBox.Max.Z);
+            return bounds;
 		}
 
 		/// <summary>
@@ -29,7 +29,7 @@ namespace UnityEngine.Reflect.Extensions
 		/// <returns></returns>
 		public static SyncBoundingBox ToSyncBoundingBox (this Bounds bounds)
 		{
-			return new SyncBoundingBox(bounds.min, bounds.max);
+			return new SyncBoundingBox(new System.Numerics.Vector3(bounds.min.x, bounds.min.y, bounds.min.z), new System.Numerics.Vector3(bounds.max.x, bounds.max.y, bounds.max.z));
 		}
 
 		/// <summary>
@@ -39,8 +39,8 @@ namespace UnityEngine.Reflect.Extensions
 		/// <param name="syncBoundingBox"></param>
 		public static void Encapsulate(this Bounds bounds, SyncBoundingBox syncBoundingBox)
 		{
-			bounds.min = Vector3.Min(bounds.min, syncBoundingBox.Min);
-			bounds.max = Vector3.Max(bounds.max, syncBoundingBox.Max);
+			bounds.min = Vector3.Min(bounds.min, new Vector3(syncBoundingBox.Min.X, syncBoundingBox.Min.Y, syncBoundingBox.Min.Z));
+			bounds.max = Vector3.Max(bounds.max, new Vector3(syncBoundingBox.Max.X, syncBoundingBox.Max.Y, syncBoundingBox.Max.Z));
 		}
 
 		/// <summary>

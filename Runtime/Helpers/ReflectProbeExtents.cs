@@ -65,8 +65,8 @@ namespace UnityEngine.Reflect.Extensions.Helpers
                 {
                     // Grow the Bounds with the object's bounding box.
                     //Debug.DrawLine(kvp.Value.BoundingBox.Min, kvp.Value.BoundingBox.Max, Color.cyan, 1.0f);
-                    _bounds.min = Vector3.Min(_bounds.min, kvp.Value.BoundingBox.Min);
-                    _bounds.max = Vector3.Max(_bounds.max, kvp.Value.BoundingBox.Max);
+                    _bounds.min = Vector3.Min(_bounds.min, new Vector3(kvp.Value.BoundingBox.Min.X, kvp.Value.BoundingBox.Min.Y, kvp.Value.BoundingBox.Min.Z));
+                    _bounds.max = Vector3.Max(_bounds.max, new Vector3(kvp.Value.BoundingBox.Max.X, kvp.Value.BoundingBox.Max.Y, kvp.Value.BoundingBox.Max.Z));
                 }
             }
             //Debug.Break();
