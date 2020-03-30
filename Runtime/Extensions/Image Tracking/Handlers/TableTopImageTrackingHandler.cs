@@ -17,7 +17,7 @@ namespace UnityEngine.Reflect.Extensions
         [Tooltip("Scale for the model on the target.")]
         [SerializeField] float scaleForModelOnTarget = 0.01f;
         [Tooltip("The AR Table Top Camera Controller component used for manipulating the AR camera in table top mode.")]
-        [SerializeField] ARTableTopCameraController aRController = default;
+        [SerializeField] UnityEngine.Reflect.Controller.Controller aRController = default;
         [Tooltip("The Gameobject containing the Model View camera.")]
         [SerializeField] GameObject screenMode = default;
         [Tooltip("The Gameobject containing the AR camera and session origin.")]

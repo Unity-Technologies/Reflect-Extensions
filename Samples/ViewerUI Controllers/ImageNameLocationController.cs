@@ -6,19 +6,12 @@ namespace UnityEngine.Reflect.Extensions
     /// <summary>
     /// Finds the image target parameter and stores image name and transform to be located when tracking is found
     /// </summary>
-    public class ImageNameLocationController : MonoBehaviour, IObserveReflectRoot
+    public class ImageNameLocationController : ImageTargetPositions, IObserveReflectRoot
     {
         [Tooltip("The menu item button in the UI.")]
         [SerializeField] Button imageTrackerButton = default;
         [Tooltip("Parameter name to search for in Metadata component.")]
         [SerializeField] string parameterName = "Image Name";
-        /// <summary>
-        /// Name of the image target (i.e. the name in the Reference Image Library) and the object transform to use for that location
-        /// </summary>
-        /// <value>The dictionary on which to perform lookups</value>
-        public Dictionary<string, Transform> ImageTargetPositionsLookup { get => imageTargetPositionsLookup; }
-        Dictionary<string, Transform> imageTargetPositionsLookup;
-
         bool foundParameter;
 
         void OnEnable()
@@ -74,7 +67,7 @@ namespace UnityEngine.Reflect.Extensions
                     imageTargetPositionsLookup.Add(result, reflectObject.transform);
                 }
                 else
-                    Debug.LogWarningFormat("There are duplicate parameter name for Camera Location. Be sure to use unique names for {0} on {1} and {2}.",
+                    Debug.LogWarningFormat("There are duplicate parameter names for Camera Location. Be sure to use unique names for {0} on {1} and {2}.",
                         result, reflectObject.name, imageTargetPositionsLookup[result]);
             }
         }
