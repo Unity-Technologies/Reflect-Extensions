@@ -15,7 +15,7 @@ namespace UnityEngine.Reflect.Extensions.Rules.Advanced
     {
         public enum MATCH_TYPE { All, Any }
         [Tooltip("Metadata Filtering Criterias")]
-        [SerializeField] Criteria[] criterias = new Criteria[1] { new Criteria ("Category", "Planting") };
+        [SerializeField] List<SearchCriteria> criterias = new List<SearchCriteria> () { new SearchCriteria("Category", "Planting") };
         [Tooltip("Metadata Filtering Type")]
         [SerializeField] MATCH_TYPE matchType = default;
         [Tooltip("Prefab to instantiate.")]
@@ -35,7 +35,7 @@ namespace UnityEngine.Reflect.Extensions.Rules.Advanced
 
         private void Awake()
         {
-            if (prefab == null || criterias.Length == 0)
+            if (prefab == null || criterias.Count == 0)
             {
                 enabled = false;
                 return;
@@ -143,7 +143,7 @@ namespace UnityEngine.Reflect.Extensions.Rules.Advanced
                 return;
 
             if (matchType == MATCH_TYPE.All && md.MatchAllCriterias(criterias) ||
-                matchType == MATCH_TYPE.Any && md.MatchAnyCriteria(criterias))
+                matchType == MATCH_TYPE.Any && md.MatchAnyCriterias(criterias))
             {
                 _identifiers.Add(obj.identifier);
                 _addedObjects[obj] = Instantiate(prefab, obj.transform.position, obj.transform.rotation, transform);
