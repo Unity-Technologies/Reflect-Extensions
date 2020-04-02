@@ -1,0 +1,20 @@
+{
+    "name": "Unity.Reflect.Extensions.Samples",
+    "references": [
+        "GUID:6cf67fea318af2844a952982933563b0",
+        "GUID:951584c526119ab418b67bd907336c9d",
+        "GUID:fa73fd152fd08bc4f8cbb6105f130720",
+        "GUID:0325ff35a3a2abf4aa1d8fa2ca702523"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
