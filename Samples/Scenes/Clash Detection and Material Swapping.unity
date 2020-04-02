@@ -1450,8 +1450,8 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: fbfd98c16ac541d47977e50fbdd1aa7c, type: 2}
   clashCategory1: 
   clashCategory2: 
-  FilteredObjects1: []
-  FilteredObjects2: []
+  filteredObjects1: []
+  filteredObjects2: []
   ClashingObjects: []
 --- !u!114 &1370176638
 MonoBehaviour:
@@ -6837,7 +6837,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1957332019793884116}
   m_Layer: 0
-  m_Name: Reflect Custom Viewer Combined AR
+  m_Name: Reflect Custom Viewer Clash Dectection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
