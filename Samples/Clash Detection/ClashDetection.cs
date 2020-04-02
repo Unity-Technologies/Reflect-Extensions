@@ -8,6 +8,7 @@ namespace UnityEngine.Reflect.Extensions
         public InputField inputField1;
         public InputField inputField2;
         public Material highlightMaterial;
+        public Button clashButton;
 
         public string clashCategory1;
         public string clashCategory2;
@@ -15,7 +16,9 @@ namespace UnityEngine.Reflect.Extensions
         public List<GameObject> filteredObjects2;
         public List<GameObject> ClashingObjects;
 
+        Dictionary<string, List<GameObject>> categoryLookup;
         List<GameObject> Highlights;
+        bool foundParameter;
 
         void OnEnable()
         {
@@ -34,18 +37,24 @@ namespace UnityEngine.Reflect.Extensions
 
         public void SetName()
         {
-            clashCategory1 = inputField1.text;
-            clashCategory2 = inputField2.text;
-            CheckClashes();
+            if (NullChecks())
+            {
+                clashCategory1 = inputField1.text;
+                clashCategory2 = inputField2.text;
+                if (FilterObjects())
+                    CheckClashes();
+            }
         }
 
         [ContextMenu("Check for Clashes")]
         void RunInEditor()
         {
+            if (Highlights == null)
+                Highlights = new List<GameObject>();
             filteredObjects1 = new List<GameObject>();
             filteredObjects2 = new List<GameObject>();
-            ClashingObjects.Clear();
             Metadata[] metas = FindObjectsOfType<Metadata>();
+
             foreach (var meta in metas)
             {
                 if (meta.GetParameter("Category") == clashCategory1)
@@ -63,12 +72,9 @@ namespace UnityEngine.Reflect.Extensions
             CheckClashes();
         }
 
-        public void CheckClashes()
+        void CheckClashes()
         {
-            //ClashingObjects.Clear();
-            //Metadata[] metadatas = FindObjectsOfType<Metadata>();
-            //filteredObjects1 = MetadataUtilities.FilterbyCategory(metadatas, clashCategory1);
-            //filteredObjects2 = MetadataUtilities.FilterbyCategory(metadatas, clashCategory2);
+            ClashingObjects = new List<GameObject>();
 
             foreach (var filteredObjects1 in filteredObjects1)
             {
@@ -93,8 +99,7 @@ namespace UnityEngine.Reflect.Extensions
             {
                 GameObject.DestroyImmediate(item);
             }
-            
-            Highlights.Clear();
+
             Highlights = new List<GameObject>();
 
             foreach (var item in ClashingObjects)
@@ -111,15 +116,52 @@ namespace UnityEngine.Reflect.Extensions
             }
         }
 
+        bool NullChecks()
+        {
+            if (inputField1 != null && inputField2 != null)
+            {
+                if (!string.IsNullOrEmpty(inputField1.text) && !string.IsNullOrEmpty(inputField2.text))
+                    return true;
+            }
+            return false;
+        }
+
+        bool FilterObjects()
+        {
+            if (categoryLookup.ContainsKey(clashCategory1) && categoryLookup.ContainsKey(clashCategory2))
+            {
+                filteredObjects1 = new List<GameObject>(categoryLookup[clashCategory1]);
+                filteredObjects2 = new List<GameObject>(categoryLookup[clashCategory2]);
+                return true;
+            }
+            return false;
+        }
+
+        void MakeButtonNotInteractable()
+        {
+            if (clashButton != null)
+            {
+                clashButton.interactable = false;
+            }
+        }
+
+        void MakeButtonInteractable()
+        {
+            if (clashButton != null)
+            {
+                clashButton.interactable = true;
+            }
+        }
+
         #region IObserveReflectRoot implementation
         /// <summary>
         /// What to do before searching Metadata components
         /// </summary>
         public void NotifyBeforeSearch()
         {
-            filteredObjects1 = new List<GameObject>();
-            filteredObjects2 = new List<GameObject>();
-            ClashingObjects.Clear();
+            categoryLookup = new Dictionary<string, List<GameObject>>();
+            MakeButtonNotInteractable();
+            foundParameter = false;
         }
 
         /// <summary>
@@ -131,11 +173,17 @@ namespace UnityEngine.Reflect.Extensions
         {
             if (reflectObject != null && !string.IsNullOrEmpty(result))
             {
-                Debug.Log(reflectObject);
-                if (clashCategory1 == result && !filteredObjects1.Contains(reflectObject))
-                    filteredObjects1.Add(reflectObject);
-                else if (clashCategory2 == result && !filteredObjects2.Contains(reflectObject))
-                    filteredObjects2.Add(reflectObject);
+                foundParameter = true;
+                if (categoryLookup.ContainsKey(result))
+                {
+                    var thisList = categoryLookup[result];
+                    if (!thisList.Contains(reflectObject))
+                        categoryLookup[result].Add(reflectObject);
+                }
+                else
+                {
+                    categoryLookup.Add(result, new List<GameObject> { reflectObject });
+                }
             }
         }
 
@@ -143,7 +191,10 @@ namespace UnityEngine.Reflect.Extensions
         /// What to do after finishing the search on Metatdata components
         /// </summary>
         public void NotifyAfterSearch()
-        { }
+        {
+            if (foundParameter)
+                MakeButtonInteractable();
+        }
         #endregion
     }
 }

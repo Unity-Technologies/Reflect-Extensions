@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine.UI;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -9,7 +10,9 @@ namespace UnityEngine.Reflect.Extensions
     {
         public string categoryToPaint;
         public Material newMaterial;
+        public Button swapButton;
         List<GameObject> filteredObjects;
+        bool foundParameter;
 
         void OnEnable()
         {
@@ -72,6 +75,22 @@ namespace UnityEngine.Reflect.Extensions
             }
         }
 
+        void MakeButtonNotInteractable()
+        {
+            if (swapButton != null)
+            {
+                swapButton.interactable = false;
+            }
+        }
+
+        void MakeButtonInteractable()
+        {
+            if (swapButton != null)
+            {
+                swapButton.interactable = true;
+            }
+        }
+
         #region IObserveReflectRoot implementation
         /// <summary>
         /// What to do before searching Metadata components
@@ -79,6 +98,8 @@ namespace UnityEngine.Reflect.Extensions
         public void NotifyBeforeSearch()
         {
             filteredObjects = new List<GameObject>();
+            foundParameter = false;
+            MakeButtonNotInteractable();
         }
 
         /// <summary>
@@ -90,6 +111,7 @@ namespace UnityEngine.Reflect.Extensions
         {
             if (reflectObject != null)
             {
+                foundParameter = true;
                 if (!filteredObjects.Contains(reflectObject))
                     filteredObjects.Add(reflectObject);
             }
@@ -100,7 +122,10 @@ namespace UnityEngine.Reflect.Extensions
         /// What to do after finishing the search on Metatdata components
         /// </summary>
         public void NotifyAfterSearch()
-        { }
+        {
+            if (foundParameter)
+                MakeButtonInteractable();
+        }
         #endregion
     }
 }
