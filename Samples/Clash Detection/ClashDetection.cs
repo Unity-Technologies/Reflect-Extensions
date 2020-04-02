@@ -3,21 +3,36 @@ using UnityEngine.UI;
 
 namespace UnityEngine.Reflect.Extensions
 {
+    /// <summary>
+    /// Highlight the clash detections between two categories.
+    /// </summary>
+    /// <remarks>Right clicking on script in editor allows to run this from the context menu "Check for Clashes".</remarks>
     public class ClashDetection : MonoBehaviour, IObserveReflectRoot
     {
-        public InputField inputField1;
-        public InputField inputField2;
-        public Material highlightMaterial;
-        public Button clashButton;
+        [Header("For Runtime Detection")]
+        [Tooltip("First category to use for clash detection.")]
+        [SerializeField] InputField category1;
+        [Tooltip("Second category to use for clash detection.")]
+        [SerializeField] InputField category2;
+        [Tooltip("Material to use for highlighting clashes.")]
+        [SerializeField] Material highlightMaterial;
+        [Tooltip("Button in the menu to enter clash detection.")]
+        [SerializeField] Button clashButton;
 
-        public string clashCategory1;
-        public string clashCategory2;
-        public List<GameObject> filteredObjects1;
-        public List<GameObject> filteredObjects2;
-        public List<GameObject> ClashingObjects;
+        [Header("Detection in Editor (Right-click on script)")]
+        [Tooltip("First category to use for clash detection.")]
+        [SerializeField] string clashCategory1;
+        [Tooltip("Second category to use for clash detection.")]
+        [SerializeField] string clashCategory2;
+        [Tooltip("The objects that match category 1 when run in the editor.")]
+        [SerializeField] List<GameObject> filteredObjects1;
+        [Tooltip("The objects that match category 2 when run in the editor.")]
+        [SerializeField] List<GameObject> filteredObjects2;
+        [Tooltip("The objects that result in clashing when run in the editor.")]
+        [SerializeField] List<GameObject> ClashingObjects;
 
         Dictionary<string, List<GameObject>> categoryLookup;
-        List<GameObject> Highlights;
+        List<GameObject> Highlights = new List<GameObject>();
         bool foundParameter;
 
         void OnEnable()
@@ -30,22 +45,21 @@ namespace UnityEngine.Reflect.Extensions
             ReflectMetadataManager.Instance.Detach(this);
         }
 
-        void Start()
-        {
-            Highlights = new List<GameObject>();
-        }
-
+        /// <summary>
+        /// Starts the clash detection process. Call this from a button or something similar.
+        /// </summary>
         public void SetName()
         {
             if (NullChecks())
             {
-                clashCategory1 = inputField1.text;
-                clashCategory2 = inputField2.text;
+                clashCategory1 = category1.text;
+                clashCategory2 = category2.text;
                 if (FilterObjects())
-                    CheckClashes();
+                    CheckForClashes();
             }
         }
 
+        // For running this in the editor
         [ContextMenu("Check for Clashes")]
         void RunInEditor()
         {
@@ -69,10 +83,10 @@ namespace UnityEngine.Reflect.Extensions
                 }
             }
 
-            CheckClashes();
+            CheckForClashes();
         }
 
-        void CheckClashes()
+        void CheckForClashes()
         {
             ClashingObjects = new List<GameObject>();
 
@@ -118,9 +132,9 @@ namespace UnityEngine.Reflect.Extensions
 
         bool NullChecks()
         {
-            if (inputField1 != null && inputField2 != null)
+            if (category1 != null && category2 != null)
             {
-                if (!string.IsNullOrEmpty(inputField1.text) && !string.IsNullOrEmpty(inputField2.text))
+                if (!string.IsNullOrEmpty(category1.text) && !string.IsNullOrEmpty(category2.text))
                     return true;
             }
             return false;

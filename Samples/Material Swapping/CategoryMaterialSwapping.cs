@@ -6,17 +6,25 @@ using UnityEditor;
 
 namespace UnityEngine.Reflect.Extensions
 {
+    /// <summary>
+    /// Swaps the material of the entered category to the designated material
+    /// </summary>
+    /// <remarks>Right clicking on script in editor allows to run this from the context menu "Override Materials".</remarks>
     public class CategoryMaterialSwapping : MonoBehaviour, IObserveReflectRoot
     {
-        public string categoryToPaint;
-        public Material newMaterial;
-        public Button swapButton;
+        [Tooltip("Category to swap the material.")]
+        [SerializeField] string categoryToSwapMaterial;
+        [Tooltip("Material to use for category.")]
+        [SerializeField] Material newMaterial;
+        [Tooltip("Button in the menu to enter material swapping.")]
+        [SerializeField] Button swapButton;
+
         List<GameObject> filteredObjects;
         bool foundParameter;
 
         void OnEnable()
         {
-            ReflectMetadataManager.Instance.Attach(this, new MetadataSearch("Category", categoryToPaint, false));
+            ReflectMetadataManager.Instance.Attach(this, new MetadataSearch("Category", categoryToSwapMaterial, false));
         }
 
         void OnDisable()
@@ -24,6 +32,7 @@ namespace UnityEngine.Reflect.Extensions
             ReflectMetadataManager.Instance.Detach(this);
         }
 
+        // For running this in the editor
         [ContextMenu("Override Materials")]
         void RunInEditor()
         {
@@ -32,7 +41,7 @@ namespace UnityEngine.Reflect.Extensions
 
             foreach (var meta in metas)
             {
-                if (meta.GetParameter("Category") == categoryToPaint)
+                if (meta.GetParameter("Category") == categoryToSwapMaterial)
                 {
                     if (!filteredObjects.Contains(meta.gameObject))
                         filteredObjects.Add(meta.gameObject);
@@ -41,6 +50,9 @@ namespace UnityEngine.Reflect.Extensions
             SwapMaterialByCategory();
         }
 
+        /// <summary>
+        /// Starts the material swapping process. Call this from a button or something similar.
+        /// </summary>
         public void SwapMaterialByCategory()
         {
             foreach (var filteredObject in filteredObjects)
@@ -64,10 +76,10 @@ namespace UnityEngine.Reflect.Extensions
                     {
                         newMatArray[i] = newMaterial;
                     }
-#if UNITY_EDITOR
+                    #if UNITY_EDITOR
                     Undo.RecordObject(meshRend, "Override Materials");
                     PrefabUtility.RecordPrefabInstancePropertyModifications(meshRend);
-#endif
+                    #endif
                     meshRend.sharedMaterials = newMatArray;
                 }
 

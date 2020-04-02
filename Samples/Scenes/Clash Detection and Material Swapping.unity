@@ -775,7 +775,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caa4f095146bb034c81e23e21e57cc3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  categoryToPaint: Ducts
+  categoryToSwapMaterial: Ducts
   newMaterial: {fileID: 2100000, guid: 79ac96af52790e941a98bdfa40cc878d, type: 2}
   swapButton: {fileID: 1536052115}
 --- !u!1 &705507993
@@ -1391,7 +1391,6 @@ GameObject:
   - component: {fileID: 1370176635}
   - component: {fileID: 1370176638}
   - component: {fileID: 1370176637}
-  - component: {fileID: 1370176636}
   m_Layer: 5
   m_Name: Clash Detection
   m_TagString: Untagged
@@ -1421,19 +1420,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1370176636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1370176634}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06543084da605c14f9123cc29759270b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  filteredObjects: []
 --- !u!114 &1370176637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1446,15 +1432,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32826e76e3d13934e9abc62a67f69628, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputField1: {fileID: 1933061555}
-  inputField2: {fileID: 1496608391}
+  category1: {fileID: 1933061555}
+  category2: {fileID: 1496608391}
   highlightMaterial: {fileID: 2100000, guid: fbfd98c16ac541d47977e50fbdd1aa7c, type: 2}
   clashButton: {fileID: 2035784874}
   clashCategory1: 
   clashCategory2: 
   filteredObjects1: []
-  filteredObjects2:
-  - {fileID: 0}
+  filteredObjects2: []
   ClashingObjects: []
 --- !u!114 &1370176638
 MonoBehaviour:
