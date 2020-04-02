@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace UnityEngine.Reflect.Extensions
 {
@@ -11,25 +12,25 @@ namespace UnityEngine.Reflect.Extensions
     {
         [Header("For Runtime Detection")]
         [Tooltip("First category to use for clash detection.")]
-        [SerializeField] InputField category1;
+        [SerializeField] Dropdown firstCategory = default;
         [Tooltip("Second category to use for clash detection.")]
-        [SerializeField] InputField category2;
+        [SerializeField] Dropdown secondCategory = default;
         [Tooltip("Material to use for highlighting clashes.")]
-        [SerializeField] Material highlightMaterial;
+        [SerializeField] Material highlightMaterial = default;
         [Tooltip("Button in the menu to enter clash detection.")]
-        [SerializeField] Button clashButton;
+        [SerializeField] Button clashButton = default;
 
         [Header("Detection in Editor (Right-click on script)")]
         [Tooltip("First category to use for clash detection.")]
-        [SerializeField] string clashCategory1;
+        [SerializeField] string clashCategory1 = default;
         [Tooltip("Second category to use for clash detection.")]
-        [SerializeField] string clashCategory2;
+        [SerializeField] string clashCategory2 = default;
         [Tooltip("The objects that match category 1 when run in the editor.")]
-        [SerializeField] List<GameObject> filteredObjects1;
+        [SerializeField] List<GameObject> filteredObjects1 = default;
         [Tooltip("The objects that match category 2 when run in the editor.")]
-        [SerializeField] List<GameObject> filteredObjects2;
+        [SerializeField] List<GameObject> filteredObjects2 = default;
         [Tooltip("The objects that result in clashing when run in the editor.")]
-        [SerializeField] List<GameObject> ClashingObjects;
+        [SerializeField] List<GameObject> ClashingObjects = default;
 
         Dictionary<string, List<GameObject>> categoryLookup;
         List<GameObject> Highlights = new List<GameObject>();
@@ -45,6 +46,14 @@ namespace UnityEngine.Reflect.Extensions
             ReflectMetadataManager.Instance.Detach(this);
         }
 
+        void Start()
+        {
+            if (firstCategory != null && secondCategory != null)
+            {
+
+            }
+        }
+
         /// <summary>
         /// Starts the clash detection process. Call this from a button or something similar.
         /// </summary>
@@ -52,8 +61,6 @@ namespace UnityEngine.Reflect.Extensions
         {
             if (NullChecks())
             {
-                clashCategory1 = category1.text;
-                clashCategory2 = category2.text;
                 if (FilterObjects())
                     CheckForClashes();
             }
@@ -130,22 +137,40 @@ namespace UnityEngine.Reflect.Extensions
             }
         }
 
+        void FillDropdown()
+        {
+            if (firstCategory != null && secondCategory != null && categoryLookup != null)
+            {
+                if (categoryLookup.Keys.Count > 0)
+                {
+                    firstCategory.ClearOptions();
+                    firstCategory.AddOptions(categoryLookup.Keys.ToList());
+                    secondCategory.ClearOptions();
+                    secondCategory.AddOptions(categoryLookup.Keys.ToList());
+                }
+            }
+        }
+
         bool NullChecks()
         {
-            if (category1 != null && category2 != null)
+            if (firstCategory != null && secondCategory != null && categoryLookup != null)
             {
-                if (!string.IsNullOrEmpty(category1.text) && !string.IsNullOrEmpty(category2.text))
+                if (!string.IsNullOrEmpty(firstCategory.options[firstCategory.value].text) &&
+                    !string.IsNullOrEmpty(secondCategory.options[secondCategory.value].text))
+                {
                     return true;
+                }
             }
             return false;
         }
 
         bool FilterObjects()
         {
-            if (categoryLookup.ContainsKey(clashCategory1) && categoryLookup.ContainsKey(clashCategory2))
+            if (categoryLookup.ContainsKey(firstCategory.options[firstCategory.value].text) && 
+                categoryLookup.ContainsKey(secondCategory.options[secondCategory.value].text))
             {
-                filteredObjects1 = new List<GameObject>(categoryLookup[clashCategory1]);
-                filteredObjects2 = new List<GameObject>(categoryLookup[clashCategory2]);
+                filteredObjects1 = new List<GameObject>(categoryLookup[firstCategory.options[firstCategory.value].text]);
+                filteredObjects2 = new List<GameObject>(categoryLookup[secondCategory.options[secondCategory.value].text]);
                 return true;
             }
             return false;
@@ -207,7 +232,10 @@ namespace UnityEngine.Reflect.Extensions
         public void NotifyAfterSearch()
         {
             if (foundParameter)
+            {
+                FillDropdown();
                 MakeButtonInteractable();
+            }
         }
         #endregion
     }

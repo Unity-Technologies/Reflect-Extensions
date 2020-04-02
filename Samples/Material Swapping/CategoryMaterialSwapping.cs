@@ -13,11 +13,11 @@ namespace UnityEngine.Reflect.Extensions
     public class CategoryMaterialSwapping : MonoBehaviour, IObserveReflectRoot
     {
         [Tooltip("Category to swap the material.")]
-        [SerializeField] string categoryToSwapMaterial;
+        [SerializeField] string categoryToSwapMaterial = default;
         [Tooltip("Material to use for category.")]
-        [SerializeField] Material newMaterial;
+        [SerializeField] Material newMaterial = default;
         [Tooltip("Button in the menu to enter material swapping.")]
-        [SerializeField] Button swapButton;
+        [SerializeField] Button swapButton = default;
 
         List<GameObject> filteredObjects;
         bool foundParameter;
