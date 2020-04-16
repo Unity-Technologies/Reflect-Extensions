@@ -4,6 +4,11 @@
   "version": "0.1.0-preview.1",
   "unity": "2019.2",
   "description": "Runtime components and Editor tools to make the most of Unity Reflect.",
+  "author": {
+    "name": "Unity AEC Team",
+    "email": "aec@unity3d.com",
+    "url": "https://www.unity3d.com/aec"
+  },
   "dependencies": {
     "com.unity.reflect": "1.1.0-preview.6",
     "com.unity.cinemachine": "2.5.0",
@@ -16,9 +21,19 @@
   },
   "samples": [
     {
-      "displayName": "Material Remapping",
-      "description": "Example of Materials replacement at Runtime.",
-      "path": "Samples/MaterialsRemapping"
-    }
+      "displayName": "Custom Viewers",
+      "description": "Custom Reflect Viewers, including Reflect API samples and Unity features.",
+      "path": "Samples/Custom Viewers"
+    },
+    {
+      "displayName": "Editor Tools",
+      "description": "Custom Reflect Editor Tools, including Metadata Search & Replace.",
+      "path": "Samples/Editor Tools"
+	},
+    {
+      "displayName": "Addressable Assets Data",
+      "description": "Required for Addressable Workflow.",
+      "path": "Samples/AddressableAssetsData"
+	}
   ]
 }

@@ -1,0 +1,5 @@
+{
+	"displayName":"Editor Tools",
+	"description": "Custom Reflect Editor Tools, including Metadata Search & Replace.",
+	"createSeparatePackage": false
+}

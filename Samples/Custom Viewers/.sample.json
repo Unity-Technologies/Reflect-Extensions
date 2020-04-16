@@ -1,0 +1,5 @@
+{
+	"displayName":"Custom Viewers",
+	"description": "Custom Reflect Viewers, including Reflect API samples and Unity features.",
+	"createSeparatePackage": false
+}
