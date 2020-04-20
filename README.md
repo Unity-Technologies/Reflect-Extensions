@@ -4,7 +4,7 @@
 
 This package is a series of both Runtime components and Editor tools developed by Reflect users. These can be used to easily customize and extend Reflect to your needs.
 
-Thee components and tools are not maintained by the Reflect development team, and therefore come without any garantee that they will be maintained.
+The components and tools are not maintained by the Reflect development team, and therefore come without any garantee that they will be maintained.
 
 
 ## How do I get support for Reflect Extensions?
