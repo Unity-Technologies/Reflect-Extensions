@@ -121,6 +121,86 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &213094181
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 213094182}
+  - component: {fileID: 213094184}
+  - component: {fileID: 213094183}
+  m_Layer: 0
+  m_Name: AI People
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &213094182
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 213094181}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1455286821}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &213094183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 213094181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7b9e8bebe1893d4b828669779ceb36f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reference: {fileID: 113348, guid: d462bd979a6e98d4594cf556c844ddcf, type: 3}
+  number: 30
+--- !u!114 &213094184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 213094181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 210573bfd06612a4696d74ac99be318d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  addMeshColliders: 0
+  isTrigger: 0
+  ignoreFilters:
+  - key: Category
+    value: Doors
+  - key: Category
+    value: Ceilings
+  notWalkable:
+  - key: Category
+    value: Walls
+  - key: Category
+    value: Railings
+  - key: Category
+    value: Columns
+  - key: Category
+    value: Furniture
+  - key: Category
+    value: Site
+  - key: Category
+    value: Planting
+  - key: Category
+    value: Roofs
 --- !u!1001 &1455286819
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -686,3 +766,56 @@ Light:
     type: 3}
   m_PrefabInstance: {fileID: 1455286819}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1455286821 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 582079587061443111, guid: e54e6446963ac1943b3315154116a216,
+    type: 3}
+  m_PrefabInstance: {fileID: 1455286819}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1455286822 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7466616170252598611, guid: e54e6446963ac1943b3315154116a216,
+    type: 3}
+  m_PrefabInstance: {fileID: 1455286819}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1455286823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455286822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c01d10b4eee441b489b14146e6155e99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navMeshDisplayColors:
+    serializedVersion: 2
+    key0: {r: 0, g: 1, b: 1, a: 0.2}
+    key1: {r: 0, g: 0, b: 1, a: 0.2}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
