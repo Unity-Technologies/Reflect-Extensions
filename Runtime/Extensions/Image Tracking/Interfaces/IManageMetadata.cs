@@ -8,5 +8,6 @@
         void OnEnabled();
         void OnDisabled();
         void OnStarted();
+        void StartSearch();
     }
 }

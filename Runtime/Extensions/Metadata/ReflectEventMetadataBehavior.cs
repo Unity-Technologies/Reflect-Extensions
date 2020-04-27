@@ -17,6 +17,7 @@ namespace UnityEngine.Reflect.Extensions
                 Debug.LogError("Fatal Error: The Reflect Metadata Manager cannot be null.");
         }
 
+        #region IManageMetadata implementation
         public void OnEnabled()
         {
             if (ReflectEventsManager.Instance == null)
@@ -43,6 +44,11 @@ namespace UnityEngine.Reflect.Extensions
         public void OnStarted()
         { }
 
+        public void StartSearch()
+        {
+            reflectMetadataManager.InitializeSearch(SearchMetadata());
+        }
+        #endregion
         // New project has just been opened
         void ProjectOpened()
         {
@@ -103,7 +109,7 @@ namespace UnityEngine.Reflect.Extensions
         {
             if (reflectMetadataManager.NotifyRootDictionary == null || reflectMetadataManager.NotifyRootDictionary.Count < 1)
                 return;
-            reflectMetadataManager.InitializeSearch(SearchMetadata());
+            StartSearch();
         }
 
         // The Sync prefab has been instantiated
@@ -111,7 +117,7 @@ namespace UnityEngine.Reflect.Extensions
         {
             if (!initialize || reflectMetadataManager.NotifyRootDictionary == null || reflectMetadataManager.NotifyRootDictionary.Count < 1)
                 return;
-            reflectMetadataManager.InitializeSearch(SearchMetadata());
+            StartSearch();
         }
 
         IEnumerator SearchMetadata()

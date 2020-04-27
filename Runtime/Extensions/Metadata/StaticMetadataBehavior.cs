@@ -5,7 +5,6 @@ namespace UnityEngine.Reflect.Extensions
     public class StaticMetadataBehavior : IManageMetadata
     {
         ReflectMetadataManager reflectMetadataManager;
-        string thisRootParameter;
 
         public StaticMetadataBehavior(ReflectMetadataManager manager)
         {
@@ -15,6 +14,7 @@ namespace UnityEngine.Reflect.Extensions
                 Debug.LogError("Fatal Error: The Reflect Metadata Manager cannot be null.");
         }
 
+        #region IManageMetadata implementation
         public void OnEnabled()
         { }
 
@@ -30,8 +30,14 @@ namespace UnityEngine.Reflect.Extensions
             }
 
             // Search metadata
+            StartSearch();
+        }
+
+        public void StartSearch()
+        {
             SearchMetadata();
         }
+        #endregion
 
         void SearchMetadata()
         {

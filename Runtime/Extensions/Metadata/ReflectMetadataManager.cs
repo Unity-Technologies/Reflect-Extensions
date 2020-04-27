@@ -128,19 +128,36 @@ namespace UnityEngine.Reflect.Extensions
         #endregion
 
         #region IManageMetadata implementation
+        /// <summary>
+        /// Pass through the OnEnable call
+        /// </summary>
         public void OnEnabled()
         {
             metadataManager?.OnEnabled();
         }
 
+        /// <summary>
+        /// Pass through the OnDisable call
+        /// </summary>
         public void OnDisabled()
         {
             metadataManager?.OnDisabled();
         }
 
+        /// <summary>
+        /// Pass through the Start call
+        /// </summary>
         public void OnStarted()
         {
             metadataManager?.OnStarted();
+        }
+
+        /// <summary>
+        /// Pass through the call to start a metadata search
+        /// </summary>
+        public void StartSearch()
+        {
+            metadataManager?.StartSearch();
         }
         #endregion
 
