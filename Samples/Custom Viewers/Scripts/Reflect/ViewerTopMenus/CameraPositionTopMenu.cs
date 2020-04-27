@@ -61,12 +61,11 @@
                 if (bimSelectionMenu != null)
                     bimSelectionMenu.DisableAndReset();
                 Deactivate();
-                ShowButtons();
             }
             else
             {
                 // Stop AR mode in case some other tracking is going on
-                if (roomFloorImageTrackingHandler != null && roomFloorImageTrackingHandler.enabled)
+                if (roomFloorImageTrackingHandler != null && roomFloorImageTrackingHandler.enabled && !roomFloorImageTrackingHandler.InARImageTracking)
                     ImageTrackingManager.Instance.StopARMode();
                 // Disable the 3D view camera controller and add or enable the Rotate Only Camera
                 if (cameraSelectionMenu != null)
@@ -75,19 +74,23 @@
                 if (bimSelectionMenu != null)
                     bimSelectionMenu.StartLookingForHits();
                 // Start listening for AR
-                if (roomFloorImageTrackingHandler != null && roomFloorImageTrackingHandler.enabled)
+                if (roomFloorImageTrackingHandler != null && roomFloorImageTrackingHandler.enabled && !roomFloorImageTrackingHandler.InARImageTracking)
                     roomFloorImageTrackingHandler.StartHandlingAR();
-                base.OnClick();
+                Activate();
             }
         }
 
         /// <summary>
-        /// Simulate a button press on this menu
+        /// Force exiting of this menu (e.g. Exit AR button)
         /// </summary>
-        public void ButtonPress()
+        public void Exit()
         {
-            if (button != null)
-                button.onClick.Invoke();
+            if (roomFloorImageTrackingHandler != null && roomFloorImageTrackingHandler.enabled && roomFloorImageTrackingHandler.InARImageTracking)
+            {
+                ImageTrackingManager.Instance.StopARMode();
+            }
+            activated = true;
+            OnClick();
         }
     }
 }

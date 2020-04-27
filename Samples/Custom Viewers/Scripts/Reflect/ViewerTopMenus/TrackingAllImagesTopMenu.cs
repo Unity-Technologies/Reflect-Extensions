@@ -47,28 +47,31 @@
             if (activated)
             {
                 Deactivate();
-                ShowButtons();
             }
             else
             {
-                if (imageNameTrackingHandler != null && imageNameTrackingHandler.enabled)
+                if (imageNameTrackingHandler != null && imageNameTrackingHandler.enabled && !imageNameTrackingHandler.InARImageTracking)
                 {
                     // Stop AR mode in case some other tracking is going on
                     ImageTrackingManager.Instance.StopARMode();
                     // Start listening for AR
                     imageNameTrackingHandler.StartHandlingAR();
                 }
-                base.OnClick();
+                Activate();
             }
         }
 
         /// <summary>
-        /// Simulate a button press on this menu
+        /// Force exiting of this menu (e.g. Exit AR button)
         /// </summary>
-        public void ButtonPress()
+        public void Exit()
         {
-            if (button != null)
-                button.onClick.Invoke();
+            if (imageNameTrackingHandler != null && imageNameTrackingHandler.enabled && imageNameTrackingHandler.InARImageTracking)
+            {
+                ImageTrackingManager.Instance.StopARMode();
+            }
+            activated = true;
+            OnClick();
         }
     }
 }

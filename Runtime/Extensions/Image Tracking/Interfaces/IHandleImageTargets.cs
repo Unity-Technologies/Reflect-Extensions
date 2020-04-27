@@ -13,5 +13,6 @@ namespace UnityEngine.Reflect.Extensions
         void StartHandlingAR();
         void StopHandlingAR();
         void ResetTracking();
+        bool InARImageTracking { get; }
     }
 }

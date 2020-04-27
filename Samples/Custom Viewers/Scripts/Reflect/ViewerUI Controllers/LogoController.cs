@@ -38,7 +38,9 @@ namespace UnityEngine.Reflect.Extensions
         void Start()
         {
             if (BrandedLogoImage != null && BrandedLogoImage.GetComponent<RectTransform>() != null)
+            {
                 initialLogoWidth = BrandedLogoImage.GetComponent<RectTransform>().rect.width;
+            }
             else
                 initialLogoWidth = 88f;
 

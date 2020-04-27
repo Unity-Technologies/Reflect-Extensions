@@ -3,7 +3,7 @@
     /// <summary>
     /// Looks for light components and overrides light intensity field on Sync Object creation
     /// </summary>
-    public class LightIntensityController : MonoBehaviour, IObserveSyncObjectCreation
+    public class LightIntensityController : MonoBehaviour, IObserveMetadata
     {
         [Tooltip("Desired value for the light intensity.")]
         [SerializeField] float lightIntensityOverrideValue = 1f;
@@ -26,7 +26,7 @@
         /// </summary>
         /// <param name="reflectObject">The GameObject with the matching Metadata search pattern</param>
         /// <param name="result">The value of the found parameter in the Metadata component</param>
-        public void NotifySyncObjectObservers(GameObject reflectObject, string result = null)
+        public void NotifyObservers(GameObject reflectObject, string result = null)
         {
             // If there is a light component
             if (reflectObject != null && reflectObject.GetComponentsInChildren<Light>() != null)

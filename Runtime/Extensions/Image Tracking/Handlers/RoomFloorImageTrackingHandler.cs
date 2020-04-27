@@ -15,53 +15,49 @@ namespace UnityEngine.Reflect.Extensions
     public class RoomFloorImageTrackingHandler : MonoBehaviour, IHandleImageTargets, ILocateImageTargets
     {
         [Tooltip("Button to leave AR mode.")]
-        [SerializeField] Button leaveARButton = default;
+        [SerializeField] protected Button leaveARButton = default;
         [Tooltip("Button to reset tracking.")]
-        [SerializeField] Button resetTrackingButton = default;
+        [SerializeField] protected Button resetTrackingButton = default;
         [Tooltip("Gameobject with the Toggle to switch to viewing in AR.")]
-        [SerializeField] GameObject viewInARToggle = default;
+        [SerializeField] protected GameObject viewInARToggle = default;
         [Tooltip("Gameobject with the Toggle to switch to entering manual dimensions.")]
-        [SerializeField] GameObject dimensionsToggle = default;
+        [SerializeField] protected GameObject dimensionsToggle = default;
         [Tooltip("Gameobject with the dimensions UI elements.")]
-        [SerializeField] GameObject dimensionsGameObject = default;
+        [SerializeField] protected GameObject dimensionsGameObject = default;
         [Tooltip("Input Field for east wall dimensions.")]
-        [SerializeField] InputField eastWallDimension = default;
+        [SerializeField] protected InputField eastWallDimension = default;
         [Tooltip("Input Field for south wall dimensions.")]
-        [SerializeField] InputField southWallDimension = default;
+        [SerializeField] protected InputField southWallDimension = default;
         [Tooltip("Input Field for west wall dimensions.")]
-        [SerializeField] InputField westWallDimension = default;
+        [SerializeField] protected InputField westWallDimension = default;
         [Tooltip("Input Field for north wall dimensions.")]
-        [SerializeField] InputField northWallDimension = default;
+        [SerializeField] protected InputField northWallDimension = default;
         [Tooltip("The Gameobject containing the Model View camera.")]
-        [SerializeField] GameObject screenMode = default;
+        [SerializeField] protected GameObject screenMode = default;
         [Tooltip("The Gameobject containing the AR camera and session origin.")]
-        [SerializeField] GameObject aRMode = default;
+        [SerializeField] protected GameObject aRMode = default;
         [Tooltip("The Gameobject containing the VR camera and canvas.")]
-        [SerializeField] GameObject vRMode = default;
+        [SerializeField] protected GameObject vRMode = default;
         [Tooltip("The AR Session - there should only be one.")]
-        [SerializeField] ARSession aRSession = default;
+        [SerializeField] protected ARSession aRSession = default;
         [Tooltip("The AR Table Top Camera Controller component used for manipulating the AR camera in table top mode.")]
-        [SerializeField] UnityEngine.Reflect.Controller.Controller aRController = default;
+        [SerializeField] protected UnityEngine.Reflect.Controller.Controller aRController = default;
         [Tooltip("The UI Gameobject with the find image target helper.")]
-        [SerializeField] GameObject targetHelper = default;
+        [SerializeField] protected GameObject targetHelper = default;
         [Tooltip("The AR Session Origin to be used by this tracking handler.")]
-        [SerializeField] ARSessionOrigin sessionOrigin = default;
+        [SerializeField] protected ARSessionOrigin sessionOrigin = default;
         [Tooltip("The AR Camera to be used for this tracking handler.")]
-        [SerializeField] Camera aRCamera = default;
+        [SerializeField] protected Camera aRCamera = default;
         /// <summary>
         /// The AR Camera to be used for this tracking handler
         /// </summary>
         /// <value>AR Camera</value>
         public Camera ArCamera { get => aRCamera; }
-        /// <summary>
-        /// If currently in AR
-        /// </summary>
-        /// <value>True if in AR, false otherwise</value>
-        public bool InARImageTracking { get => inARImageTracking; }
+
         int initialCameraMask;
-        Vector3 targetLocationToBeUsed;
+        protected Vector3 targetLocationToBeUsed;
         float xPos, zPos;
-        bool inARImageTracking;
+        protected bool inARImageTracking;
 
         void Start()
         {
@@ -93,9 +89,15 @@ namespace UnityEngine.Reflect.Extensions
 
         #region IHandleImageTargets implementation
         /// <summary>
+        /// If currently in AR
+        /// </summary>
+        /// <value>True if in AR, false otherwise</value>
+        public bool InARImageTracking { get => inARImageTracking; }
+
+        /// <summary>
         /// Start AR
         /// </summary>
-        public void StartHandlingAR()
+        public virtual void StartHandlingAR()
         {
             if (ImageTrackingManager.Instance.ARSupported)
                 ImageTrackingManager.Instance.AttachLocater(this);
@@ -104,7 +106,7 @@ namespace UnityEngine.Reflect.Extensions
         /// <summary>
         /// Stop AR
         /// </summary>
-        public void StopHandlingAR()
+        public virtual void StopHandlingAR()
         {
             ExitAR();
             if (ImageTrackingManager.Instance.ARSupported)
@@ -115,7 +117,7 @@ namespace UnityEngine.Reflect.Extensions
         /// What happens when the Tracking Found notification occurs from the ImageTrackingManager
         /// </summary>
         /// <param name="trackedImage">The AR Tracked Image</param>
-        public void FoundTracking(ARTrackedImage trackedImage)
+        public virtual void FoundTracking(ARTrackedImage trackedImage)
         {
             if (inARImageTracking) // Helps to control unexpected calls
             {
@@ -150,7 +152,7 @@ namespace UnityEngine.Reflect.Extensions
         /// What happens when the Tracking Lost notification occurs from the ImageTrackingManager
         /// </summary>
         /// <param name="trackedImage">The AR Tracked Image</param>
-        public void LostTracking(ARTrackedImage trackedImage)
+        public virtual void LostTracking(ARTrackedImage trackedImage)
         {
             if (inARImageTracking) // Helps to control unexpected calls
             {
@@ -228,7 +230,7 @@ namespace UnityEngine.Reflect.Extensions
         /// Locate the image target using the Bounds property of the mesh or renderer
         /// </summary>
         /// <param name="_bounds">Bounds property</param>
-        public void LocateImageTarget(Bounds _bounds)
+        public virtual void LocateImageTarget(Bounds _bounds)
         {
             if (ImageTrackingManager.Instance.ARSupported)
             {
@@ -245,7 +247,7 @@ namespace UnityEngine.Reflect.Extensions
         /// Locate the image target using a Vector3 position
         /// </summary>
         /// <param name="movePosition">Vector3 position</param>
-        public void LocateImageTarget(Vector3 movePosition)
+        public virtual void LocateImageTarget(Vector3 movePosition)
         {
             if (ImageTrackingManager.Instance.ARSupported)
             {
@@ -257,7 +259,7 @@ namespace UnityEngine.Reflect.Extensions
         #endregion
 
         // Enable and disable UI elements as we enter and leave AR mode
-        void HandleUI(bool goingIntoAR)
+        protected void HandleUI(bool goingIntoAR)
         {
             if (goingIntoAR)
             {
@@ -302,7 +304,7 @@ namespace UnityEngine.Reflect.Extensions
         }
 
         // Checking to see if dimensions were provided. Major assumptions here are this is a rectangular room and floor extends to walls
-        bool CalculateTargetPosition(Bounds _floor)
+        protected bool CalculateTargetPosition(Bounds _floor)
         {
             if (eastWallDimension != null && !string.IsNullOrEmpty(eastWallDimension.text) &&
                 !Mathf.Approximately(0f, float.Parse(eastWallDimension.text)))

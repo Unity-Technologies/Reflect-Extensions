@@ -74,6 +74,12 @@ namespace UnityEngine.Reflect.Extensions
 
         #region IHandleImageTargets implementation
         /// <summary>
+        /// If currently in AR
+        /// </summary>
+        /// <value>True if in AR, false otherwise</value>
+        public bool InARImageTracking { get => inARImageTracking; }
+
+        /// <summary>
         /// Start AR
         /// </summary>
         public void StartHandlingAR()

@@ -315,20 +315,12 @@ namespace UnityEngine.Reflect.Extensions
         }
 
         /// <summary>
-        /// Notify listening image target handlers to start handling AR
-        /// </summary>
-        public void StartARMode()
-        {
-            foreach (var handler in imageTargetHandlerNotifyList)
-                handler.StartHandlingAR();
-        }
-
-        /// <summary>
         /// Notify listening image target handlers to stop handling AR
         /// </summary>
         public void StopARMode()
         {
-            foreach (var handler in imageTargetHandlerNotifyList)
+            var tempNotifyList = new List<IHandleImageTargets>(imageTargetHandlerNotifyList);
+            foreach (var handler in tempNotifyList)
                 handler.StopHandlingAR();
         }
         #endregion

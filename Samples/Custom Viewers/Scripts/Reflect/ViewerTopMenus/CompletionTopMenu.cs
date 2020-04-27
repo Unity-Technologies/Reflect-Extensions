@@ -45,11 +45,10 @@
                 // Will enable all the renderers
                 completionDateSlider.OnReset();
                 Deactivate();
-                ShowButtons();
             }
             else
             {
-                base.OnClick();
+                Activate();
             }
         }
     }

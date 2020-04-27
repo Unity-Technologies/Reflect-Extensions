@@ -79,11 +79,10 @@
             if (activated)
             {
                 Deactivate();
-                ShowButtons();
             }
             else
             {
-                if (tableTopImageTrackingHandler != null && tableTopImageTrackingHandler.enabled)
+                if (tableTopImageTrackingHandler != null && tableTopImageTrackingHandler.enabled && !tableTopImageTrackingHandler.InARImageTracking)
                 {
                     // Stop AR mode in case some other tracking is going on
                     ImageTrackingManager.Instance.StopARMode();
@@ -91,17 +90,21 @@
                     tableTopImageTrackingHandler.StartHandlingAR();
                     ImageTrackingManager.Instance.RelocateImageTarget(movePosition);
                 }
-                base.OnClick();
+                Activate();
             }
         }
 
         /// <summary>
-        /// Simulate a button press on this menu
+        /// Force exiting of this menu (e.g. Exit AR button)
         /// </summary>
-        public void ButtonPress()
+        public void Exit()
         {
-            if (button != null)
-                button.onClick.Invoke();
+            if (tableTopImageTrackingHandler != null && tableTopImageTrackingHandler.enabled && tableTopImageTrackingHandler.InARImageTracking)
+            {
+                ImageTrackingManager.Instance.StopARMode();
+            }
+            activated = true;
+            OnClick();
         }
 
         #region IObserveReflectRoot implementation
@@ -120,7 +123,7 @@
         /// </summary>
         /// <param name="reflectObject">The GameObject with the matching Metadata search pattern</param>
         /// <param name="result">The value of the found parameter in the Metadata component</param>
-        public void NotifyReflectRootObservers(GameObject reflectObject, string result = null)
+        public void NotifyObservers(GameObject reflectObject, string result = null)
         {
             if (reflectObject != null)
             {

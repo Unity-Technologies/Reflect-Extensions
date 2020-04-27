@@ -196,7 +196,7 @@ namespace UnityEngine.Reflect.Extensions
         /// </summary>
         /// <param name="reflectObject">The GameObject with the matching Metadata search pattern</param>
         /// <param name="result">The value of the found parameter in the Metadata component</param>
-        public void NotifyReflectRootObservers(GameObject reflectObject, string result = null)
+        public void NotifyObservers(GameObject reflectObject, string result = null)
         {
             if (reflectObject != null)
             {

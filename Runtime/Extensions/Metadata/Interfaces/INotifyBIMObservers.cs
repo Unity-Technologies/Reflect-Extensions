@@ -7,7 +7,7 @@
     {
         void Attach(IObserveReflectRoot observer, MetadataSearch searchParameters);
         void Detach(IObserveReflectRoot observer);
-        void Attach(IObserveSyncObjectCreation observer, MetadataSearch searchParameters);
-        void Detach(IObserveSyncObjectCreation observer);
+        void Attach(IObserveMetadata observer, MetadataSearch searchParameters);
+        void Detach(IObserveMetadata observer);
     }
 }

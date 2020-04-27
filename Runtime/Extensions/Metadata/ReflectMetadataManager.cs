@@ -10,21 +10,38 @@ namespace UnityEngine.Reflect.Extensions
     /// recursive searches through the Metadata components.
     /// </summary>
     [DisallowMultipleComponent]
-    public class ReflectMetadataManager : MonoBehaviour, INotifyBIMObservers
+    public class ReflectMetadataManager : MonoBehaviour, INotifyBIMObservers, IManageMetadata
     {
-        [Tooltip("The transform under which Reflect will instantiate the model.")]
+        [Tooltip("The transform under which Reflect will instantiate or search through the model.")]
         [SerializeField] Transform reflectRoot = default;
+        /// <summary>
+        /// The transform under which Reflect will instantiate or search through the model.
+        /// </summary>
+        public Transform ReflectRoot { get { return reflectRoot; } }
+
+        [Tooltip("The Reflect Sync Manager.")]
+        [SerializeField] SyncManager syncManager;
+        /// <summary>
+        /// The Reflect Sync Manager
+        /// </summary>
+        public SyncManager SyncManager { get { return syncManager; } }
         /// <summary>
         /// Default value to return any non-empty or non-null value for a parameter
         /// </summary>
         public readonly string AnyValue = "AnyNonNullValue";
-        Dictionary<IObserveReflectRoot, MetadataSearch> notifyRootDictionary = new Dictionary<IObserveReflectRoot, MetadataSearch>();
-        Dictionary<IObserveReflectRoot, MetadataSearch> notifyRootCopy;
-        Dictionary<IObserveSyncObjectCreation, MetadataSearch> notifySyncObjectDictionary = new Dictionary<IObserveSyncObjectCreation, MetadataSearch>();
-        Dictionary<IObserveSyncObjectCreation, MetadataSearch> notifySyncObjectCopy;
+
+        Dictionary<IObserveMetadata, MetadataSearch> notifyRootDictionary = new Dictionary<IObserveMetadata, MetadataSearch>();
+        public Dictionary<IObserveMetadata, MetadataSearch> NotifyRootDictionary { get => notifyRootDictionary; set => notifyRootDictionary = value; }
+        Dictionary<IObserveMetadata, MetadataSearch> notifyRootCopy;
+        public Dictionary<IObserveMetadata, MetadataSearch> NotifyRootCopy { get => notifyRootCopy; set => notifyRootCopy = value; }
+        Dictionary<IObserveMetadata, MetadataSearch> notifySyncObjectDictionary = new Dictionary<IObserveMetadata, MetadataSearch>();
+        public Dictionary<IObserveMetadata, MetadataSearch> NotifySyncObjectDictionary { get => notifySyncObjectDictionary; set => notifySyncObjectDictionary = value; }
+        Dictionary<IObserveMetadata, MetadataSearch> notifySyncObjectCopy;
+        public Dictionary<IObserveMetadata, MetadataSearch> NotifySyncObjectCopy { get => notifySyncObjectCopy; set => notifySyncObjectCopy = value; }
+
         string thisRootParameter;
-        string thisObjCreatedParameter;
-        SyncManager syncManager;
+        IManageMetadata metadataManager;
+
         static ReflectMetadataManager instance;
         /// <summary>
         /// The Reflect Metadata Manager
@@ -45,6 +62,27 @@ namespace UnityEngine.Reflect.Extensions
             set => instance = value;
         }
 
+        #region Setting Metadata Behavior
+        public void SetMetadataBehavior(IManageMetadata manager)
+        {
+            if (manager != null && manager != metadataManager)
+            {
+                ResetMetadataBehavior();
+                metadataManager = manager;
+            }
+            if (metadataManager == null)
+            {
+                metadataManager = new StaticMetadataBehavior(instance);
+            }
+        }
+
+        void ResetMetadataBehavior()
+        {
+            metadataManager = null;
+        }
+        #endregion
+
+        #region Monobehaviour Methods
         void Awake()
         {
             if (Instance != null && Instance != this)
@@ -52,11 +90,11 @@ namespace UnityEngine.Reflect.Extensions
             else
                 Instance = this;
 
-            syncManager = FindObjectOfType<SyncManager>();
+            if (syncManager == null)
+                syncManager = FindObjectOfType<SyncManager>();
             if (syncManager == null)
             {
-                Debug.LogError("Fatal error. There is no Reflect SyncManager.");
-                enabled = false;
+                Debug.LogWarning("WARNING: There is no Reflect SyncManager which is find if model is attached already to Reflect Root object.");
             }
             else
             {
@@ -66,128 +104,76 @@ namespace UnityEngine.Reflect.Extensions
                 {
                     Debug.LogError("Fatal error. There is no Reflect Root specified.");
                     enabled = false;
+                    return;
                 }
             }
+
+            CheckForModel();
         }
 
         void OnEnable()
         {
-            if (ReflectEventsManager.Instance == null)
-            {
-                Debug.LogError("Fatal error. There is no Reflect Events Manager. Be sure to add one in the scene.");
-                enabled = false;
-                return;
-            }
-            ReflectEventsManager.Instance.onIsDoneInstantiating += WaitTillModelIsLoaded;
-            ReflectEventsManager.Instance.onSyncUpdateEnd += SyncPerformed;
-            ReflectEventsManager.Instance.onSyncObjectCreated += SyncObjectAdded;
-            syncManager.onProjectOpened += ProjectOpened;
+            OnEnabled();
         }
 
         void OnDisable()
         {
-            ReflectEventsManager.Instance.onIsDoneInstantiating -= WaitTillModelIsLoaded;
-            ReflectEventsManager.Instance.onSyncUpdateEnd -= SyncPerformed;
-            ReflectEventsManager.Instance.onSyncObjectCreated -= SyncObjectAdded;
-            syncManager.onProjectOpened -= ProjectOpened;
+            OnDisabled();
         }
 
-        // New project has just been opened
-        void ProjectOpened()
+        void Start()
         {
-            // Make a copy of the notifySyncObjectDictionary so we can remove entries and no duplicate notifications are sent
-            notifySyncObjectCopy = new Dictionary<IObserveSyncObjectCreation, MetadataSearch>(notifySyncObjectDictionary);
+            OnStarted();
         }
+        #endregion
 
-        // Objects are being instantiated. Get and pass back the Metadata searches.
-        void SyncObjectAdded(GameObject obj)
+        #region IManageMetadata implementation
+        public void OnEnabled()
         {
-            if (notifySyncObjectDictionary == null || notifySyncObjectDictionary.Count < 1)
-                return;
-
-            foreach (KeyValuePair<IObserveSyncObjectCreation, MetadataSearch> kvp in notifySyncObjectDictionary)
-            {
-                if (notifySyncObjectCopy.ContainsKey(kvp.Key)) // Still wants notifications
-                {
-                    Metadata meta = obj.GetComponent<Metadata>();
-                    if (meta != null)
-                    {
-                        thisObjCreatedParameter = meta.GetParameter(kvp.Value.parameter);
-                        if (!string.IsNullOrEmpty(thisObjCreatedParameter))
-                        {
-                            if (kvp.Value.value == AnyValue)
-                            {
-                                kvp.Key.NotifySyncObjectObservers(meta.gameObject, thisObjCreatedParameter);
-                                if (kvp.Value.oneNotification)
-                                    notifySyncObjectCopy.Remove(kvp.Key); // So we do not notify again
-                            }
-                            else if (thisObjCreatedParameter == kvp.Value.value)
-                            {
-                                kvp.Key.NotifySyncObjectObservers(meta.gameObject);
-                                if (kvp.Value.oneNotification)
-                                    notifySyncObjectCopy.Remove(kvp.Key); // So we do not notify again
-                            }
-                        }
-                        // If the listener is looking for any value including empty or null parameters
-                        else if (kvp.Value.value == AnyValue)
-                        {
-                            kvp.Key.NotifySyncObjectObservers(meta.gameObject, thisObjCreatedParameter);
-                            if (kvp.Value.oneNotification)
-                                notifySyncObjectCopy.Remove(kvp.Key); // So we do not notify again
-                        }
-                    }
-                    // If the listener is looking for any value including empty or null parameters
-                    else if (kvp.Value.value == AnyValue)
-                    {
-                        kvp.Key.NotifySyncObjectObservers(obj);
-                        if (kvp.Value.oneNotification)
-                            notifySyncObjectCopy.Remove(kvp.Key); // So we do not notify again
-                    }
-                }
-            }
+            metadataManager?.OnEnabled();
         }
 
-        // A live sync has just occurred
-        void SyncPerformed()
+        public void OnDisabled()
         {
-            if (notifyRootDictionary == null || notifyRootDictionary.Count < 1)
-                return;
-            StartCoroutine(Initialize());
+            metadataManager?.OnDisabled();
         }
 
-        // The Sync prefab has been instantiated
-        void WaitTillModelIsLoaded(bool initialize)
+        public void OnStarted()
         {
-            if (!initialize || notifyRootDictionary == null || notifyRootDictionary.Count < 1)
-                return;
-            StartCoroutine(Initialize());
+            metadataManager?.OnStarted();
         }
+        #endregion
 
-        IEnumerator Initialize()
+        #region Utility Methods
+        // Check to see if there is already a model on the Reflect Root and then set metadata behavior
+        void CheckForModel()
         {
-            // Make a copy of the notifyRootDictionary so we can remove entries and no duplicate notifications are sent
-            notifyRootCopy = new Dictionary<IObserveReflectRoot, MetadataSearch>(notifyRootDictionary);
-            foreach (KeyValuePair<IObserveReflectRoot, MetadataSearch> kvp in notifyRootDictionary)
-            {
-                kvp.Key.NotifyBeforeSearch();
-            }
-
-            yield return new WaitForSeconds(0.75f); // Buffer until isDoneInstatiating event gets worked out
-            if (reflectRoot != null)
-                SearchReflectRoot(reflectRoot);
-
-            foreach (KeyValuePair<IObserveReflectRoot, MetadataSearch> kvp in notifyRootDictionary)
-            {
-                kvp.Key.NotifyAfterSearch();
-            }
+            if (reflectRoot != null && reflectRoot.childCount > 0)
+                SetMetadataBehavior(new StaticMetadataBehavior(instance));
+            else
+                SetMetadataBehavior(new ReflectEventMetadataBehavior(instance));
         }
 
-        // Get and pass back Metadata searches
-        void SearchReflectRoot(Transform root)
+        /// <summary>
+        /// Initializing search of the Reflect root with Reflect events
+        /// </summary>
+        /// <param name="searchMethod">The search coroutine</param>
+        /// <returns>The search coroutine</returns>
+        public IEnumerator InitializeSearch(IEnumerator searchMethod)
+        {
+            if (searchMethod != null)
+                StartCoroutine(searchMethod);
+            return searchMethod;
+        }
+
+        /// <summary>
+        /// Public utility method to get and pass back Metadata search recursively through a Root object
+        /// </summary>
+        public void SearchReflectRoot(Transform root)
         {
             foreach (Transform tran in root)
             {
-                foreach (KeyValuePair<IObserveReflectRoot, MetadataSearch> kvp in notifyRootDictionary)
+                foreach (KeyValuePair<IObserveMetadata, MetadataSearch> kvp in notifyRootDictionary)
                 {
                     if (notifyRootCopy.ContainsKey(kvp.Key)) // Still wants notifications
                     {
@@ -199,13 +185,13 @@ namespace UnityEngine.Reflect.Extensions
                             {
                                 if (kvp.Value.value == AnyValue)
                                 {
-                                    kvp.Key.NotifyReflectRootObservers(meta.gameObject, thisRootParameter);
+                                    kvp.Key.NotifyObservers(meta.gameObject, thisRootParameter);
                                     if (kvp.Value.oneNotification)
                                         notifyRootCopy.Remove(kvp.Key); // So we do not notify again
                                 }
                                 else if (thisRootParameter == kvp.Value.value)
                                 {
-                                    kvp.Key.NotifyReflectRootObservers(meta.gameObject);
+                                    kvp.Key.NotifyObservers(meta.gameObject);
                                     if (kvp.Value.oneNotification)
                                         notifyRootCopy.Remove(kvp.Key); // So we do not notify again
                                 }
@@ -214,7 +200,7 @@ namespace UnityEngine.Reflect.Extensions
                         // If the listener is looking for any value including empty or null parameters
                         else if (kvp.Value.value == AnyValue)
                         {
-                            kvp.Key.NotifyReflectRootObservers(tran.gameObject);
+                            kvp.Key.NotifyObservers(tran.gameObject);
                             if (kvp.Value.oneNotification)
                                 notifyRootCopy.Remove(kvp.Key); // So we do not notify again
                         }
@@ -223,6 +209,7 @@ namespace UnityEngine.Reflect.Extensions
                 SearchReflectRoot(tran);
             }
         }
+        #endregion
 
         #region INotifyBIMObervers implementation
         /// <summary>
@@ -258,7 +245,7 @@ namespace UnityEngine.Reflect.Extensions
         /// </summary>
         /// <param name="observer">The observer to be notified</param>
         /// <param name="searchParameters">Search parameter object</param>
-        public void Attach(IObserveSyncObjectCreation observer, MetadataSearch searchParameters)
+        public void Attach(IObserveMetadata observer, MetadataSearch searchParameters)
         {
             if (!notifySyncObjectDictionary.ContainsKey(observer))
             {
@@ -273,7 +260,7 @@ namespace UnityEngine.Reflect.Extensions
         /// Stop getting notified when Reflect sync object creation occurs
         /// </summary>
         /// <param name="observer">The observer to be notified</param>
-        public void Detach(IObserveSyncObjectCreation observer)
+        public void Detach(IObserveMetadata observer)
         {
             if (notifySyncObjectDictionary.ContainsKey(observer))
             {

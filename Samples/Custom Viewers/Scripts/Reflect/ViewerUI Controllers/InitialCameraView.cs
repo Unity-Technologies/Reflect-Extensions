@@ -3,7 +3,7 @@
     /// <summary>
     /// Looks for the 3D View object in the Metadata and uses that transform to set initial camera view on Sync Object creation
     /// </summary>
-    public class InitialCameraView : MonoBehaviour, IObserveSyncObjectCreation
+    public class InitialCameraView : MonoBehaviour, IObserveMetadata
     {
         [Tooltip("Camera to move on start.")]
         [SerializeField] Transform cameraToMove = default;
@@ -25,7 +25,7 @@
         /// </summary>
         /// <param name="reflectObject">The GameObject with the matching Metadata search pattern</param>
         /// <param name="result">The value of the found parameter in the Metadata component</param>
-        public void NotifySyncObjectObservers(GameObject reflectObject, string result = null)
+        public void NotifyObservers(GameObject reflectObject, string result = null)
         {
             // If the toggle is checked on the project menu
             if (ifCheckingCamera != null && ifCheckingCamera.isOn && reflectObject != null)
