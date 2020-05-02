@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Reflect.Extensions.Helpers;
 
 namespace UnityEngine.Reflect.Extensions
 {
