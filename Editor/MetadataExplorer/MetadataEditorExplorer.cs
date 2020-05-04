@@ -275,10 +275,17 @@ namespace UnityEditor.Reflect.Extensions
     public class SearchGroup : IObserveReflectRoot
     {
         bool searchFinished;
+        /// <summary>
+        /// Public flag to notify that the search is completed
+        /// </summary>
         public bool SearchFinished { get => searchFinished; }
         Dictionary<SearchGroup, Dictionary<GameObject, string>> _searchGroups;
         Dictionary<GameObject, string> searchResults;
 
+        /// <summary>
+        /// Constructor for a new search crtiteria group
+        /// </summary>
+        /// <param name="searchGroups">The data holder of multiple search criteria and results to which to add matches</param>
         public SearchGroup(Dictionary<SearchGroup, Dictionary<GameObject, string>> searchGroups)
         {
             _searchGroups = searchGroups;
