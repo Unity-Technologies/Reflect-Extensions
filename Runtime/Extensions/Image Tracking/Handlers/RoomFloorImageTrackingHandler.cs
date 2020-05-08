@@ -41,8 +41,7 @@ namespace UnityEngine.Reflect.Extensions
         [Tooltip("The AR Session - there should only be one.")]
         [SerializeField] protected ARSession aRSession = default;
         [Tooltip("The AR Table Top Camera Controller component used for manipulating the AR camera in table top mode.")]
-        [SerializeField] protected UnityEngine.Reflect.Controller.Controller aRController = default;
-        [Tooltip("The UI Gameobject with the find image target helper.")]
+        [SerializeField] protected UnityEngine.Reflect.Controller.Controller aRController = default;[Tooltip("The UI Gameobject with the find image target helper.")]
         [SerializeField] protected GameObject targetHelper = default;
         [Tooltip("The AR Session Origin to be used by this tracking handler.")]
         [SerializeField] protected ARSessionOrigin sessionOrigin = default;
@@ -54,7 +53,7 @@ namespace UnityEngine.Reflect.Extensions
         /// <value>AR Camera</value>
         public Camera ArCamera { get => aRCamera; }
 
-        int initialCameraMask;
+        int showCameraMask;
         protected Vector3 targetLocationToBeUsed;
         float xPos, zPos;
         protected bool inARImageTracking;
@@ -63,7 +62,7 @@ namespace UnityEngine.Reflect.Extensions
         {
             // Save initial values
             if (aRCamera != null)
-                initialCameraMask = aRCamera.cullingMask;
+                showCameraMask = aRCamera.cullingMask;
         }
 
         void OnEnable()
@@ -109,8 +108,12 @@ namespace UnityEngine.Reflect.Extensions
         public virtual void StopHandlingAR()
         {
             ExitAR();
+            // This is for an external Stop call (e.g. Exit AR button)
             if (ImageTrackingManager.Instance.ARSupported)
+            {
                 ImageTrackingManager.Instance.DetachLocater(this);
+                ImageTrackingManager.Instance.DetachTrackingHandler(this);
+            }
         }
 
         /// <summary>
@@ -142,7 +145,7 @@ namespace UnityEngine.Reflect.Extensions
                     // Allow camera to see content if it was masked
                     if (aRCamera != null && aRCamera.cullingMask == 1 << LayerMask.NameToLayer("UI"))
                     {
-                        aRCamera.cullingMask = initialCameraMask;
+                        aRCamera.cullingMask = showCameraMask;
                     }
                 }
             }
@@ -171,6 +174,7 @@ namespace UnityEngine.Reflect.Extensions
         {
             if (aRSession != null)
                 aRSession.Reset();
+            LostTracking(null);
         }
         #endregion
 
@@ -179,20 +183,29 @@ namespace UnityEngine.Reflect.Extensions
         {
             // Clean detach so no session resets call lost tracking if we were already in AR mode
             ImageTrackingManager.Instance.DetachTrackingHandler(this);
+
             HandleUI(true);
             if (aRController != null)
                 aRController.enabled = false;
-            if (aRMode != null)
-                aRMode.SetActive(true);
+
+            inARImageTracking = true;
+            // Call this manually to mask the camera
+            LostTracking(null);
+
+            // Enable the AR Session
+            if (aRMode != null && aRSession != null)
+            {
+                aRMode.SetActive(true); //For first time in AR
+                aRSession.enabled = true;
+                aRSession.Reset();
+            }
+
+            // Turn off other modes
             if (screenMode != null)
                 screenMode.SetActive(false);
             if (vRMode != null)
                 vRMode.SetActive(false);
-            if (aRSession != null)
-                aRSession.Reset();
-            inARImageTracking = true;
-            // Call this manually to mask the camera
-            LostTracking(null);
+
             // Listen for tracking
             ImageTrackingManager.Instance.AttachTrackingHandler(this);
         }
@@ -204,22 +217,25 @@ namespace UnityEngine.Reflect.Extensions
             {
                 // Stop listening
                 ImageTrackingManager.Instance.DetachTrackingHandler(this);
+
                 HandleUI(false);
-                if (aRMode != null)
-                    aRMode.SetActive(false);
+
+                // Turn other modes back on
                 if (screenMode != null)
                     screenMode.SetActive(true);
                 if (vRMode != null)
                     vRMode.SetActive(true);
 
-                // Set camera back to what its initial culling mask if it was changed
-                if (aRCamera != null && aRCamera.cullingMask == 1 << LayerMask.NameToLayer("UI"))
+                // Set camera to show nothing
+                if (aRCamera != null)
                 {
-                    aRCamera.cullingMask = initialCameraMask;
+                    aRCamera.cullingMask = 0;
                 }
-
+                // Disable the AR Session
                 if (aRSession != null)
-                    aRSession.Reset();
+                {
+                    aRSession.enabled = false;
+                }
 
                 inARImageTracking = false;
             }

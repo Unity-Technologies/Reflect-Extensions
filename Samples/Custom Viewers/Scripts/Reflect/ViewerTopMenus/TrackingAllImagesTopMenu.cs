@@ -66,7 +66,7 @@
         /// </summary>
         public void Exit()
         {
-            if (imageNameTrackingHandler != null && imageNameTrackingHandler.enabled && imageNameTrackingHandler.InARImageTracking)
+            if (imageNameTrackingHandler != null && imageNameTrackingHandler.enabled)
             {
                 ImageTrackingManager.Instance.StopARMode();
             }

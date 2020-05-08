@@ -99,7 +99,7 @@
         /// </summary>
         public void Exit()
         {
-            if (tableTopImageTrackingHandler != null && tableTopImageTrackingHandler.enabled && tableTopImageTrackingHandler.InARImageTracking)
+            if (tableTopImageTrackingHandler != null && tableTopImageTrackingHandler.enabled)
             {
                 ImageTrackingManager.Instance.StopARMode();
             }

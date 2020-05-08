@@ -85,7 +85,7 @@
         /// </summary>
         public void Exit()
         {
-            if (roomFloorImageTrackingHandler != null && roomFloorImageTrackingHandler.enabled && roomFloorImageTrackingHandler.InARImageTracking)
+            if (roomFloorImageTrackingHandler != null && roomFloorImageTrackingHandler.enabled)
             {
                 ImageTrackingManager.Instance.StopARMode();
             }

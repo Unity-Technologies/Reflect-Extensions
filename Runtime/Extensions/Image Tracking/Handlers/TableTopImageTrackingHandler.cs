@@ -42,7 +42,7 @@ namespace UnityEngine.Reflect.Extensions
         /// </summary>
         /// <value>Scale for the model on the target</value>
         public float ScaleForModelOnTarget { get => scaleForModelOnTarget; }
-        int initialCameraMask;
+        int showCameraMask;
         float initialClippingPlane;
         Quaternion initialSessionOriginRotation;
         Vector3 initialSessionOriginPosition;
@@ -55,7 +55,7 @@ namespace UnityEngine.Reflect.Extensions
             // Save initial values
             if (aRCamera != null)
             {
-                initialCameraMask = aRCamera.cullingMask;
+                showCameraMask = aRCamera.cullingMask;
                 initialClippingPlane = aRCamera.farClipPlane;
             }
             if (sessionOrigin != null)
@@ -94,8 +94,12 @@ namespace UnityEngine.Reflect.Extensions
         public void StopHandlingAR()
         {
             ExitAR();
+            // This is for an external Stop call (e.g. Exit AR button)
             if (ImageTrackingManager.Instance.ARSupported)
+            {
                 ImageTrackingManager.Instance.DetachLocater(this);
+                ImageTrackingManager.Instance.DetachTrackingHandler(this);
+            }
         }
 
         /// <summary>
@@ -136,7 +140,7 @@ namespace UnityEngine.Reflect.Extensions
                     // Allow camera to see content if it was masked
                     if (aRCamera != null && aRCamera.cullingMask == 1 << LayerMask.NameToLayer("UI"))
                     {
-                        aRCamera.cullingMask = initialCameraMask;
+                        aRCamera.cullingMask = showCameraMask;
                     }
                 }
             }
@@ -165,6 +169,7 @@ namespace UnityEngine.Reflect.Extensions
         {
             if (aRSession != null)
                 aRSession.Reset();
+            LostTracking(null);
         }
         #endregion
 
@@ -173,19 +178,27 @@ namespace UnityEngine.Reflect.Extensions
             // Clean detach so no session resets call lost tracking if we were already in AR mode
             ImageTrackingManager.Instance.DetachTrackingHandler(this);
             HandleUI(true);
-            if (aRMode != null)
-                aRMode.SetActive(true);
+            if (aRController != null)
+                aRController.enabled = true;
+
+            inARImageTracking = true;
+            // Call this manually to mask the camera
+            LostTracking(null);
+
+            // Enable the AR Session
+            if (aRMode != null && aRSession != null)
+            {
+                aRMode.SetActive(true); //For first time in AR
+                aRSession.enabled = true;
+                aRSession.Reset();
+            }
+
+            // Turn off other modes
             if (screenMode != null)
                 screenMode.SetActive(false);
             if (vRMode != null)
                 vRMode.SetActive(false);
-            if (aRController != null)
-                aRController.enabled = true;
-            if (aRSession != null)
-                aRSession.Reset();
-            inARImageTracking = true;
-            // Call this manually to mask the camera
-            LostTracking(null);
+
             // Listen for tracking
             ImageTrackingManager.Instance.AttachTrackingHandler(this);
         }
@@ -196,31 +209,32 @@ namespace UnityEngine.Reflect.Extensions
             {
                 // Stop listening
                 ImageTrackingManager.Instance.DetachTrackingHandler(this);
+
                 HandleUI(false);
                 if (aRController != null)
                     aRController.enabled = false;
-                if (aRMode != null)
-                    aRMode.SetActive(false);
+
                 if (screenMode != null)
                     screenMode.SetActive(true);
                 if (vRMode != null)
                     vRMode.SetActive(true);
 
+                // Set camera to show nothing
+                if (aRCamera != null)
+                {
+                    aRCamera.farClipPlane = initialClippingPlane;
+                    aRCamera.cullingMask = 0;
+                }
+                // Disable the AR Session
+                if (aRSession != null)
+                {
+                    aRSession.enabled = false;
+                }
+
                 //Reset the session origin
                 sessionOrigin.transform.rotation = initialSessionOriginRotation;
                 sessionOrigin.transform.position = initialSessionOriginPosition;
                 sessionOrigin.transform.localScale = initialSessionOriginScale;
-
-                // Set camera back to what its initial settings if it was changed
-                if (aRCamera != null)
-                {
-                    aRCamera.farClipPlane = initialClippingPlane;
-                    if (aRCamera.cullingMask == 1 << LayerMask.NameToLayer("UI"))
-                        aRCamera.cullingMask = initialCameraMask;
-                }
-
-                if (aRSession != null)
-                    aRSession.Reset();
 
                 inARImageTracking = false;
             }
