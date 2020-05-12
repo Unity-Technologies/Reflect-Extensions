@@ -22,8 +22,6 @@ namespace UnityEngine.Reflect.Extensions
         [SerializeField] GameObject screenMode = default;
         [Tooltip("The Gameobject containing the AR camera and session origin.")]
         [SerializeField] GameObject aRMode = default;
-        [Tooltip("The Gameobject containing the VR camera and canvas.")]
-        [SerializeField] GameObject vRMode = default;
         [Tooltip("The AR Session - there should only be one.")]
         [SerializeField] ARSession aRSession = default;
         [Tooltip("The UI Gameobject with the find image target helper.")]
@@ -193,11 +191,9 @@ namespace UnityEngine.Reflect.Extensions
                 aRSession.Reset();
             }
 
-            // Turn off other modes
+            // Turn off model view
             if (screenMode != null)
                 screenMode.SetActive(false);
-            if (vRMode != null)
-                vRMode.SetActive(false);
 
             // Listen for tracking
             ImageTrackingManager.Instance.AttachTrackingHandler(this);
@@ -214,10 +210,9 @@ namespace UnityEngine.Reflect.Extensions
                 if (aRController != null)
                     aRController.enabled = false;
 
+                // Turn model view back on
                 if (screenMode != null)
                     screenMode.SetActive(true);
-                if (vRMode != null)
-                    vRMode.SetActive(true);
 
                 // Set camera to show nothing
                 if (aRCamera != null)
