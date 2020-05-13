@@ -1,9 +1,12 @@
-﻿namespace UnityEngine.Reflect.Extensions
+﻿using UnityEngine.Reflect.Extensions.Helpers;
+using System.Collections;
+
+namespace UnityEngine.Reflect.Extensions
 {
     /// <summary>
-    /// Looks for the 3D View object in the Metadata and uses that transform to set initial camera view on Sync Object creation
+    /// Looks for the 3D View POI object and uses that transform to set initial camera view
     /// </summary>
-    public class InitialCameraView : MonoBehaviour, IObserveMetadata
+    public class InitialCameraView : MonoBehaviour
     {
         [Tooltip("Camera to move on start.")]
         [SerializeField] Transform cameraToMove = default;
@@ -12,29 +15,47 @@
 
         void OnEnable()
         {
-            ReflectMetadataManager.Instance.Attach(this, new MetadataSearch("Family", "3D View", true));
+            if (ReflectEventsManager.Instance == null)
+            {
+                Debug.LogWarning("WARNING: There is no Reflect Events Manager, which is find if model is attached already to Reflect Root object.");
+                return;
+            }
+            ReflectEventsManager.Instance.onIsDoneInstantiating += WaitTillModelIsLoaded;
         }
 
         void OnDisable()
         {
-            ReflectMetadataManager.Instance.Detach(this);
+            ReflectEventsManager.Instance.onIsDoneInstantiating -= WaitTillModelIsLoaded;
         }
 
-        /// <summary>
-        /// What to do when a Metadata parameter is found during a sync object creation
-        /// </summary>
-        /// <param name="reflectObject">The GameObject with the matching Metadata search pattern</param>
-        /// <param name="result">The value of the found parameter in the Metadata component</param>
-        public void NotifyObservers(GameObject reflectObject, string result = null)
+        // The Sync prefab has been instantiated
+        void WaitTillModelIsLoaded(bool initialize)
         {
-            // If the toggle is checked on the project menu
-            if (ifCheckingCamera != null && ifCheckingCamera.isOn && reflectObject != null)
+            if (!initialize)
+                return;
+            if (ifCheckingCamera.isOn)
+                StartCoroutine(StartSearch());
+        }
+
+        IEnumerator StartSearch()
+        {
+            yield return new WaitForSeconds(0.75f); // Buffer until isDoneInstatiating event gets worked out
+
+            if (ReflectMetadataManager.Instance.ReflectRoot != null && cameraToMove != null)
+                SearchForPOI(ReflectMetadataManager.Instance.ReflectRoot);
+
+        }
+
+        void SearchForPOI(Transform root)
+        {
+            foreach (Transform t in root)
             {
-                if (cameraToMove != null)
+                if (t.GetComponent<POI>() != null)
                 {
-                    // Use the found transform
-                    cameraToMove.SetPositionAndRotation(reflectObject.transform.position, reflectObject.transform.rotation);
+                    cameraToMove.SetPositionAndRotation(t.transform.position, t.transform.rotation);
+                    break;
                 }
+                SearchForPOI(t);
             }
         }
     }
