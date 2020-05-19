@@ -26,7 +26,7 @@ namespace UnityEditor.Reflect.Extensions
         /// </summary>
         public Dictionary<SearchGroup, Dictionary<GameObject, string>> SearchGroups { get => searchGroups; set => searchGroups = value; }
 
-        [MenuItem("Reflect/Reflect Metadata Explorer")]
+        [MenuItem("Reflect/Sample Metadata Explorer")]
         static void Init()
         {
             var window = (MetadataEditorExplorer)EditorWindow.GetWindow(typeof(MetadataEditorExplorer));

@@ -10,7 +10,7 @@ namespace UnityEngine.Reflect.Extensions
     /// <remarks>The System.ComponentModel.Description attribute is used to describe this handler in the Image Tracking Manager editor.
     /// Start this Image Tacking Handler by calling the StartHandlingAR public method.</remarks>
 #if UNITY_EDITOR
-    [System.ComponentModel.Description("Room Scale Floor Image Tracking")]
+    [System.ComponentModel.Description("Floor Name Room Scale Tracking")]
 #endif
     public class RoomFloorImageTrackingHandler : MonoBehaviour, IHandleImageTargets, ILocateImageTargets
     {

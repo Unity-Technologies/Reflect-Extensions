@@ -31,11 +31,10 @@
             if (activated)
             {
                 Deactivate();
-                ShowButtons();
             }
             else
             {
-                base.OnClick();
+                Activate();
             }
         }
     }
