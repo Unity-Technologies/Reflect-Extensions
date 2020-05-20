@@ -272,6 +272,9 @@ namespace UnityEditor.Reflect.Extensions
         #endregion
     }
 
+    /// <summary>
+    /// Example class of a search criteria group for the Metadata Editor Explorer
+    /// </summary>
     public class SearchGroup : IObserveReflectRoot
     {
         bool searchFinished;

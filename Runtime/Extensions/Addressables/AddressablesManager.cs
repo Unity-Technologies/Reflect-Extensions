@@ -109,6 +109,7 @@ namespace UnityEngine.Reflect.Extensions
             {
                 foreach (var _sprite in sprites)
                 {
+                    Debug.Log("Found sprite " + _sprite.name);
                     if (!loadedSprites.Contains(_sprite))
                         loadedSprites.Add(_sprite);
                 }

@@ -30,13 +30,13 @@
             {
                 cameraSelectionMenu = GetComponent<CameraSelectionMenu>();
                 if (cameraSelectionMenu == null)
-                    Debug.LogError("Need to add a CameraSelectionMenu to the empty field on " + this);
+                    Debug.LogWarning("Need to add a CameraSelectionMenu to the empty field on " + this);
             }
             if (bimSelectionMenu == null)
             {
                 bimSelectionMenu = GetComponent<BIMSelectionMenu>();
                 if (bimSelectionMenu == null)
-                    Debug.LogError("Need to add a BIMSelectionMenu to the empty field on " + this);
+                    Debug.LogWarning("Need to add a BIMSelectionMenu to the empty field on " + this);
             }
             base.Start();
         }

@@ -21,6 +21,9 @@ namespace UnityEngine.Reflect.Extensions
         [Tooltip("Transform of the button to close the scroll view.")]
         [SerializeField]
         RectTransform closeButton = default;
+        [Tooltip("The BIM Selection menu button.")]
+        [SerializeField]
+        Button menuButton = default;
         [Tooltip("The Room Floor Image Tracking Handler component.")]
         [SerializeField]
         RoomFloorImageTrackingHandler imageTracking = default;
@@ -253,7 +256,11 @@ namespace UnityEngine.Reflect.Extensions
         /// <summary>
         /// What to do after finishing the search on Metatdata components
         /// </summary>
-        public void NotifyAfterSearch() { }
+        public void NotifyAfterSearch()
+        {
+            if (menuButton != null)
+                menuButton.interactable = interactivityFound;
+        }
         #endregion
     }
 }
