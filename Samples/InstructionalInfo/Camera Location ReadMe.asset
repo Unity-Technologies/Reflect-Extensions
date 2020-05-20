@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf7219bab7fe46a1ad266029b2fee19, type: 3}
+  m_Name: Camera Location ReadMe
+  m_EditorClassIdentifier: 
+  icon: {fileID: 2800000, guid: bfcab34caca60e044bca7662aa9a4442, type: 3}
+  title: Setting Up Custom Camera Locations in the Reflect Viewer
+  sections:
+  - heading: 
+    text: This viewer builds on top of the default Reflect viewer by adding a button,
+      top menu and controllers to the UI gameobjects in the menu under the Canvas
+      gameobject. The following is an overview for getting a custom feature like
+      jumping to various camera positions implemented from Revit into your viewer.
+    linkText: 
+    url: 
+  - heading: Custom Parameters in Revit
+    text: 'Create a custom parameter in Revit and assign it to a family like Floors.
+      Floors were chosen because in this viewer example, the center top location
+      of the imported floor mesh is used and then moved 1.7 meters up. This can be
+      changed in the script:'
+    linkText: CameraMenuItemSelection.cs
+    url: CameraMenuItemSelection
+  - heading: Revit Parameter Name and Value
+    text: 'In this viewer, the default name for the Revit parameter is Camera Location.
+      If you wish to change that in Revit, then put your new parameter name in the
+      Parameter Name field of the Camera Selection Menu component on the gameobject
+      named:'
+    linkText: Camera Position Canvas
+    url: 
+  - heading: 
+    text: The unique value you give for this parameter in Revit will be the text
+      that is then populated in the selection menu at runtime. In the photo above
+      in the heading of this window and linked below, you can see Courtyard, 3rd
+      Floor Lobby and Cafeteria as examples.
+    linkText: Example Custom Camera View
+    url: CameraViews t:Texture2D
+  - heading: Metadata Searches
+    text: "The Revit metadata is found at runtime by using the Metadata component
+      that will be created on each of the model\u2019s game objects at runtime. You
+      can see what this will look like in play mode or by importing your Revit model
+      into the project via the Reflect window."
+    linkText: Unity Reflect Learn Tutorial
+    url: https://learn.unity.com/project/importing-assets-into-unity-with-reflect?courseId=5dd58fc1edbc2a001f5b0b32
+  - heading: 
+    text: 'There are various techniques that can be used to search and deliver results
+      from the Metadata component. I created a Reflect Metadata Manager script component
+      which is found on the game object named:'
+    linkText: Managers
+    url: 
+  - heading: 
+    text: 'This manager consolidates the various components that want to search for
+      metadata into one appropriately timed search through the model and then sends
+      targeted matches to components that have attached itself to the manager. An
+      example Search Group can be found in an editor sample search which is found
+      in the editor script file called:'
+    linkText: MetadataEditorExplorer.cs
+    url: MetadataEditorExplorer
+  - heading: 
+    text: To see the sample window in action, bring your Reflect imported model into
+      the scene and then
+    linkText: Launch the sample editor window
+    url: ExecuteMenuItem:Reflect/Sample Metadata Explorer
+  - heading: Branded Viewer
+    text: 'The logo displayed in the viewer can be changed by adding a new photo
+      (png, jpg, etc) to the project, changing the Texture Type to Sprite (2D and
+      UI), and then switching out the Image on the game object named:'
+    linkText: Brand Logo
+    url: 
+  loadedLayout: 1
