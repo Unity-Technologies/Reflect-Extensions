@@ -3782,7 +3782,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2629602414020171568}
   m_HandleRect: {fileID: 2629602414020171571}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -8179,7 +8179,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5488206058993109240}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e5f0e69a7273264d83750c83629a392, type: 3}
+  m_Script: {fileID: 11500000, guid: cf815521c4c9f994781b08beefe1acdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &5018203720918628460
@@ -9730,8 +9730,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_UseCustomMaterial: 0
   m_CustomMaterial: {fileID: 0}
-  m_UseCustomRendererAsset: 0
-  m_CustomRendererAsset: {fileID: 0}
 --- !u!1 &6702076545232361499
 GameObject:
   m_ObjectHideFlags: 0

@@ -9741,6 +9741,7 @@ MonoBehaviour:
   buttonBackground: {fileID: 3405320197704455946}
   ui: {fileID: 3405320197459360068}
   cameraSelectionMenu: {fileID: 3405320197734985977}
+  bimSelectionMenu: {fileID: 0}
   roomFloorImageTrackingHandler: {fileID: 5197714662612763911}
 --- !u!114 &3405320197734985977
 MonoBehaviour:
@@ -15524,8 +15525,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6473038862591263747}
   m_HandleRect: {fileID: 6473038862591263746}
   m_Direction: 0
-  m_Value: 1
-  m_Size: 0.9999999
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -16492,6 +16493,12 @@ MonoBehaviour:
   leaveARButton: {fileID: 3405320197186732975}
   resetTrackingButton: {fileID: 3405320197350253037}
   viewInARToggle: {fileID: 3405320195699396407}
+  dimensionsToggle: {fileID: 0}
+  dimensionsGameObject: {fileID: 0}
+  eastWallDimension: {fileID: 0}
+  southWallDimension: {fileID: 0}
+  westWallDimension: {fileID: 0}
+  northWallDimension: {fileID: 0}
   screenMode: {fileID: 3239615367754431981}
   aRMode: {fileID: 3405320195766318305}
   aRSession: {fileID: 5403381153887597319}
@@ -16724,7 +16731,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6974568205567946794}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e5f0e69a7273264d83750c83629a392, type: 3}
+  m_Script: {fileID: 11500000, guid: cf815521c4c9f994781b08beefe1acdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &6974568205567946792

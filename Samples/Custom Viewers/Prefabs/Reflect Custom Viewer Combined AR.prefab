@@ -3298,8 +3298,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1719178506694391626}
   m_HandleRect: {fileID: 1719178506694391625}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.9999959
+  m_Value: 1
+  m_Size: 0.9996057
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3631,7 +3631,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000061035156, y: -0.00004205238}
+  m_AnchoredPosition: {x: 0.000061035156, y: -0.000039402934}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1719178506577956249
@@ -9087,6 +9087,7 @@ MonoBehaviour:
   scrollView: {fileID: 3460740215998186648}
   menuItem: {fileID: 3460740216056257494}
   closeButton: {fileID: 3460740217711139856}
+  menuButton: {fileID: 0}
   imageTracking: {fileID: 6297397576404721071}
   raycastDistance: 10
   parameterName: Interactable
@@ -10401,7 +10402,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dea56a9eaadd1c439095de4f9a371cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ReferenceLibrary: {fileID: 11400000, guid: c86e375d7e7430442a1104e88fa21f21, type: 2}
+  m_SerializedLibrary: {fileID: 11400000, guid: c86e375d7e7430442a1104e88fa21f21,
+    type: 2}
   m_MaxNumberOfMovingImages: 1
   m_TrackedImagePrefab: {fileID: 0}
 --- !u!1 &3460740216975313196
@@ -12100,8 +12102,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_UseCustomMaterial: 0
   m_CustomMaterial: {fileID: 0}
-  m_UseCustomRendererAsset: 0
-  m_CustomRendererAsset: {fileID: 0}
 --- !u!114 &3460740217413795408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19565,7 +19565,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00004205238}
+  m_AnchoredPosition: {x: 0, y: -0.000039402934}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &6146430873103417853
@@ -19833,8 +19833,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6146430871829199243}
   m_HandleRect: {fileID: 6146430871829199284}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.99999607
+  m_Value: 1
+  m_Size: 0.9996315
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -23273,7 +23273,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 9191706780063869058}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e5f0e69a7273264d83750c83629a392, type: 3}
+  m_Script: {fileID: 11500000, guid: cf815521c4c9f994781b08beefe1acdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &9191706780063869056
