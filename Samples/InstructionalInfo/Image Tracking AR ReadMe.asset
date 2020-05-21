@@ -73,10 +73,10 @@ MonoBehaviour:
     text: 'The default custom parameter name for the <b>Image Name Tracking Handler</b>
       is Image Name. The value of this parameter in Revit is to be set to the name
       of the image target. This custom parameter can be assigned to a custom Revit
-      family or existing family. The position and rotation of this object in Revit
-      should be the location desired in AR when the image is tracked. The default
-      name of the parameter can be changed on the Image Name Location Controller
-      script on the game object named:'
+      family (see below for an example) or existing family. The position and rotation
+      of this object in Revit should be the location desired in AR when the image
+      is tracked. The default name of the parameter can be changed on the Image Name
+      Location Controller script on the game object named:'
     linkText: Tracking All Image Targets Canvas
     url: 
   - heading: 
@@ -133,4 +133,11 @@ MonoBehaviour:
       UI), and then switching out the Image on the game object named:'
     linkText: Brand Logo
     url: 
+  - heading: Image Target Revit Family
+    text: Linked below is an example of a custom Revit family that can be brought
+      and placed in the Revit model. For the instance of the family in Revit, set
+      the value of the Image Name parameter to the name of the image target as described
+      above.
+    linkText: Image Target Revit Family
+    url: Image_Target
   loadedLayout: 1
