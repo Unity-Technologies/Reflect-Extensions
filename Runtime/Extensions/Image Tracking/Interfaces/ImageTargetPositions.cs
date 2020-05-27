@@ -3,7 +3,8 @@
 namespace UnityEngine.Reflect.Extensions
 {
     /// <summary>
-    /// Abstract class for holding the image target name and the respective transform of the image target Metadata object
+    /// Abstract class for holding the image target name and the respective transform of the image target Metadata object.
+    /// Derive your scene controllers for adding or managing image targets and locations from this class. Handlers will reference this dictionary.
     /// </summary>
     public abstract class ImageTargetPositions : MonoBehaviour
     {

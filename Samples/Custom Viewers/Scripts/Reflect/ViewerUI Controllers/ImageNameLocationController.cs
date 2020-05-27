@@ -67,7 +67,7 @@ namespace UnityEngine.Reflect.Extensions
                     imageTargetPositionsLookup.Add(result, reflectObject.transform);
                 }
                 else
-                    Debug.LogWarningFormat("There are duplicate parameter names for Camera Location. Be sure to use unique names for {0} on {1} and {2}.",
+                    Debug.LogWarningFormat("There are duplicate parameter names for Image Target Location. Be sure to use unique names for {0} on {1} and {2}.",
                         result, reflectObject.name, imageTargetPositionsLookup[result]);
             }
         }
