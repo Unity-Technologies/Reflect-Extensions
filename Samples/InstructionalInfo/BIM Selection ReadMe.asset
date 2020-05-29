@@ -23,10 +23,11 @@ MonoBehaviour:
     linkText: 
     url: 
   - heading: Custom Parameters in Revit
-    text: 'Create a custom parameter in Revit and assign it to a family with which
-      you want interactivity and selection enabled. This viewer uses the furniture
-      category and displays parameter values like Family, Manufacturer, Model, Cost
-      and Materials. This behavior can be found in the script:'
+    text: 'Create a custom True/False parameter in Revit and assign it to a family
+      with which you want interactivity and set the value to True for items you want
+      selection enabled. This viewer uses the furniture category and displays parameter
+      values like Family, Manufacturer, Model, Cost and Materials. This behavior
+      can be found in the script:'
     linkText: BIMSelectionMenu.cs
     url: BIMSelectionMenu
   - heading: Revit Parameter Name and Value
