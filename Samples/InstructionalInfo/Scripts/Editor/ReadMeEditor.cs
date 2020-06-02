@@ -50,7 +50,7 @@ namespace UnityEditor.Reflect.Extensions
             method.Invoke(null, new object[] { Path.Combine(Application.dataPath, "InstructionalInfo/InfoLayout.wlt"), false });
         }
 
-        [MenuItem("Reflect/Sequencing Setup Instructions %h")]
+        [MenuItem("Reflect/Custom Viewer Instructions %h")]
         static ReadMe SelectReadme()
         {
             var _scene = EditorSceneManager.GetActiveScene();
