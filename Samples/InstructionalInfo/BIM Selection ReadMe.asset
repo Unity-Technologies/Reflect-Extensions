@@ -25,9 +25,8 @@ MonoBehaviour:
   - heading: Custom Parameters in Revit
     text: 'Create a custom Yes/No parameter in Revit and assign it to a family with
       which you want interactivity and set the value to True for items you want selection
-      enabled. This viewer uses the furniture category and displays parameter values
-      like Family, Manufacturer, Model, Cost and Materials. This behavior can be
-      found in the script:'
+      enabled. This viewer displays the parameter values of Family, Manufacturer,
+      Model, Cost and Materials. This behavior can be found in the script:'
     linkText: BIMSelectionMenu.cs
     url: BIMSelectionMenu
   - heading: Revit Parameter Name and Value
@@ -37,7 +36,9 @@ MonoBehaviour:
     linkText: Camera Position Canvas
     url: 
   - heading: 
-    text: When an Interactable object is touched then a BIM menu is displayed. In
+    text: When running the viewer, touch the eye icon button in the lower right of
+      the user interface to turn on BIM selectivity. Touch it again to turn selectivity
+      off. When an Interactable object is touched then a BIM menu is displayed. In
       the photo above in the heading of this window and linked below, you can see
       an example of what to expect.
     linkText: BIM Selection Snapshot
