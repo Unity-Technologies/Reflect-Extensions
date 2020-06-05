@@ -52,21 +52,25 @@ MonoBehaviour:
       The position and rotation of that parameterized object in Revit is matched
       to the center of the image target in the real world. The type of AR used with
       this handler is full scale and the image target can be placed on horizontal
-      and vertical surfaces.
+      and vertical surfaces. This mode of AR is started in the viewer when the <i>person
+      in the house</i> icon button is pressed.
     linkText: 
     url: 
   - heading: 
     text: <b>Room Floor Image Tracking Handler</b> uses a custom parameter name assigned
-      to a floor in Revit to then locate the image target at the top center of that
-      floor mesh in the model. The type of AR used with this handler is full scale
-      and the image needs to be placed flat on the floor.
+      to a family or object in Revit to then locate the image target at the top center
+      of that object's mesh in the model. The type of AR used with this handler is
+      full scale and the image needs to be placed flat on the floor. This mode of
+      AR is started in the viewer when the <i>camera</i> icon button is pressed and
+      view is selected.
     linkText: 
     url: 
   - heading: 
     text: <b>Table Top Image Tracking Handler</b> scales the entire model down so
       it can be seen on an image target. The type of AR used is Table Top and an
       example of this case could be a drawing sheet used as an image target with
-      the model appearing on top of the drawing.
+      the model appearing on top of the drawing. This mode of AR is started in the
+      viewer when the <i>QR code</i> icon button is pressed.
     linkText: 
     url: 
   - heading: Custom Parameters in Revit for each Handler
@@ -74,18 +78,19 @@ MonoBehaviour:
       is Image Name. The value of this parameter in Revit is to be set to the name
       of the image target. This custom parameter can be assigned to a custom Revit
       family (see below for an example) or existing family. The position and rotation
-      of this object in Revit should be the location desired in AR when the image
-      is tracked. The default name of the parameter can be changed on the Image Name
-      Location Controller script on the game object named:'
+      of the instance of this family in Revit should be the location desired in AR
+      when the image is tracked. Instances with duplicated uses of the parameter''s
+      value will be ignored. The default name of the parameter can be changed on
+      the Image Name Location Controller script on the game object named:'
     linkText: Tracking All Image Targets Canvas
     url: 
   - heading: 
     text: 'The default custom parameter name for the <b>Room Floor Image Tracking
       Handler</b> is Camera Location. The value of this parameter in Revit will be
-      displayed in a menu at runtime, and when selected, AR starts at this floor
-      location. This custom parameter is assigned to a floor family in Revit and
-      the default name of the parameter can be changed on the Camera Selection Menu
-      script on the game object named:'
+      displayed in a menu at runtime, and when selected, AR starts at the top center
+      of this paramterized object''s mesh bounds. This custom parameter is assigned
+      to a family in Revit and the default name of the parameter can be changed on
+      the Camera Selection Menu script on the game object named:'
     linkText: Camera Position Canvas
     url: 
   - heading: 
