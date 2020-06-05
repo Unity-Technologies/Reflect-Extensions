@@ -35,11 +35,14 @@ MonoBehaviour:
       gameobject named:'
     linkText: Completion Canvas
     url: 
-  - heading: 
-    text: The text value you give for this parameter in Revit will then be converted
-      to a date value and used for the slider. The text representation of that date
-      is what is displayed. In the photo above in the heading of this window and
-      linked below, you can an example of what to expect.
+  - heading: In the Viewer
+    text: When you run the viewer, a clock icon button becomes available in the lower
+      right of the user interface. Touch that button to turn on the timeline slider.
+      Touch it again to turn the slider off. The text value you give for this parameter
+      in Revit will then be converted to a date value and used for the slider. The
+      text representation of that date is what is displayed. In the photo above in
+      the heading of this window and linked below, you can an example of what to
+      expect.
     linkText: Sequencing Snapshot
     url: TimelineSample t:Texture2D
   - heading: Metadata Searches
