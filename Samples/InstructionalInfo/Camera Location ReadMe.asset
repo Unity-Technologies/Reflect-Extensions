@@ -36,11 +36,15 @@ MonoBehaviour:
       named:'
     linkText: Camera Position Canvas
     url: 
-  - heading: 
-    text: The unique value you give for this parameter in Revit will be the text
-      that is then populated in the selection menu at runtime. In the photo above
+  - heading: Using the Viewer
+    text: Touch the camera icon button in the lower right of the UI to turn on a
+      camera view selection menu. The unique values you give for the parameters in
+      Revit will be the text that is populated in the selection menu at runtime.
+      When the particular camera view is selected, you can only orbit around that
+      camera view point to see the space. By touching the camera icon button, you
+      will have your normal move controls available once again. In the photo above
       in the heading of this window and linked below, you can see Courtyard, 3rd
-      Floor Lobby and Cafeteria as examples.
+      Floor Lobby and Cafeteria as examples of camera location parameter values.
     linkText: Example Custom Camera View
     url: CameraViews t:Texture2D
   - heading: Metadata Searches
