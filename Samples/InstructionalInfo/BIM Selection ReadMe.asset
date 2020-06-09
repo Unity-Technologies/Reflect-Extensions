@@ -33,7 +33,7 @@ MonoBehaviour:
     text: 'In this viewer, the default name for the Revit parameter is Interactable.
       If you wish to change that in Revit, then put your new parameter name in the
       Parameter Name field of the BIM Selection Menu script on the game object named:'
-    linkText: Camera Position Canvas
+    linkText: BIM Selection Canvas
     url: 
   - heading: 
     text: When running the viewer, touch the eye icon button in the lower right of
