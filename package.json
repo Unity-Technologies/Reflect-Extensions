@@ -14,10 +14,10 @@
     "com.unity.cinemachine": "2.5.0",
     "com.unity.timeline": "1.2.14",
     "com.unity.addressables": "1.8.3",
-	"com.unity.xr.arfoundation": "3.1.3",
-	"com.unity.xr.arcore": "3.1.3",
-	"com.unity.xr.arkit": "3.1.3",
-	"com.unity.xr.legacyinputhelpers": "1.3.11"
+    "com.unity.xr.arfoundation": "3.1.3",
+    "com.unity.xr.arcore": "3.1.3",
+    "com.unity.xr.arkit": "3.1.3",
+    "com.unity.xr.legacyinputhelpers": "1.3.11"
   },
   "repository": {
     "type": "git",
@@ -27,17 +27,22 @@
     {
       "displayName": "Custom Viewers",
       "description": "Custom Reflect Viewers, including Reflect API samples and Unity features.",
-      "path": "Samples/Custom Viewers"
+      "path": "Samples~/Custom Viewers"
+    },
+    {
+      "displayName": "Populate Viewer",
+      "description": "Trees & RPCs replacements, Materials Remappings, Custom Family replacements, Sunlight, Clouds, Wind.",
+      "path": "Samples~/Populate Viewer"
     },
     {
       "displayName": "Editor Tools",
       "description": "Custom Reflect Editor Tools, including Metadata Search & Replace.",
-      "path": "Samples/Editor Tools"
-	},
+      "path": "Samples~/Editor"
+    },
     {
-      "displayName": "Addressable Assets Data",
-      "description": "Required for Addressable Workflow.",
-      "path": "Samples/AddressableAssetsData"
-	}
+      "displayName": "Unity Reflect Bolt Graphs",
+      "description": "This requires Unity Bolt (Visual Scripting Extension).",
+      "path": "Samples~/Bolt Graphs"
+    }
   ]
 }

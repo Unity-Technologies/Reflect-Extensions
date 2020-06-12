@@ -11,11 +11,13 @@ namespace UnityEditor.Reflect.Extensions.Rules
 		public List<SearchCriteria> _searchCriterias = new List<SearchCriteria>() { new SearchCriteria ("Category", "Planting") };
 		bool _matchAny, _matchHeight;//, _deleteOriginal;
 		readonly bool _deleteOriginal = false;
+		float minHeight = 2;
 		Object _prefab;
 
 		//static GUIContent _deleteOriginalUI = new GUIContent("Delete Original", "");
 		static GUIContent _matchAnyUI = new GUIContent("Match Any", "");
 		static GUIContent _matchHeightUI = new GUIContent("Match Height", "");
+		static GUIContent _minHeightUI = new GUIContent("Min. Height", "");
 		static GUIContent _prefabUI = new GUIContent("Prefab", "");
 
 		SerializedObject so;
@@ -42,9 +44,11 @@ namespace UnityEditor.Reflect.Extensions.Rules
 			_prefab = EditorGUILayout.ObjectField(_prefabUI, _prefab, typeof(GameObject), false);
 
 			GUI.enabled = _prefab != null;
-			//_deleteOriginal = EditorGUILayout.Toggle(_deleteOriginalUI, _deleteOriginal); // UNDONE : Cannot delete objects from SyncPrefab Instance
-			_matchHeight = EditorGUILayout.Toggle(_matchHeightUI, _matchHeight);
 
+			GUI.enabled = _matchHeight = EditorGUILayout.Toggle(_matchHeightUI, _matchHeight);
+			minHeight = EditorGUILayout.Slider(_minHeightUI, minHeight, 0, 10);
+
+			GUI.enabled = _prefab != null;
 			if (GUILayout.Button("Replace Selection"))
 				ReplaceSelection();
 			if (GUILayout.Button("Search & Replace"))
@@ -63,7 +67,7 @@ namespace UnityEditor.Reflect.Extensions.Rules
 			Undo.SetCurrentGroupName("Replace Selection");
 			foreach (GameObject g in Selection.GetFiltered<GameObject>(SelectionMode.TopLevel))
 			{
-				ReplaceObject((GameObject)_prefab, g, _deleteOriginal, _matchHeight);
+				ReplaceObject((GameObject)_prefab, g, _deleteOriginal, _matchHeight, minHeight);
 			}
 			Undo.CollapseUndoOperations(undoLvl);
 		}
@@ -74,12 +78,12 @@ namespace UnityEditor.Reflect.Extensions.Rules
 			Undo.SetCurrentGroupName("Search and Replace");
 			foreach (GameObject g in Search(_searchCriterias, _matchAny))
 			{
-				ReplaceObject((GameObject)_prefab, g, _deleteOriginal, _matchHeight);
+				ReplaceObject((GameObject)_prefab, g, _deleteOriginal, _matchHeight, minHeight);
 			}
 			Undo.CollapseUndoOperations(undoLvl);
 		}
 
-		private void ReplaceObject (GameObject source, GameObject target, bool deleteOriginal = false, bool matchHeight = false)
+		private void ReplaceObject (GameObject source, GameObject target, bool deleteOriginal = false, bool matchHeight = false, float minHeight = 0)
 		{
 			Transform replacement;
 			if (deleteOriginal)
@@ -98,6 +102,12 @@ namespace UnityEditor.Reflect.Extensions.Rules
 			if (matchHeight)
 			{
 				var md = target.GetComponent<Metadata>();
+				if (minHeight > 0 && md && md.parameters.dictionary.ContainsKey("Height"))
+				{
+					var height = float.Parse(md.GetParameter("Height")) * 0.001f;
+					if (height < minHeight)
+						return;
+				}
 				if (md && md.parameters.dictionary.ContainsKey("Height"))
 				{
 					var height = float.Parse(md.GetParameter("Height")) * 0.001f;
