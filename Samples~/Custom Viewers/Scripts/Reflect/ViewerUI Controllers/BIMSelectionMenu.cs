@@ -36,19 +36,18 @@ namespace UnityEngine.Reflect.Extensions
         [Tooltip("Show the metadata for any object touched, not just the ones with the matching true Interactable parameter name")]
         [SerializeField]
         bool showEveryObjectTouched = false;
+        [Tooltip("BIM Parameter values you want to display in your menu when item is selected.")]
+        [SerializeField]
+        List<string> bimParametersToShow;
         Ray ray;
         const float ITEMSPACE = 30f;
         float y; //Menu item placement
-        string familyName;
-        string manufacturerName;
-        string modelName;
-        string cost;
-        string[] materials;
         bool lookingForHits;
         bool interactivityFound;
         PointerEventData eventDataCurrentPosition;
         List<RaycastResult> results;
         List<GameObject> interactableObjects = new List<GameObject>();
+        List<string> bimDataToDisplay = new List<string>();
 
         void OnEnable()
         {
@@ -96,7 +95,7 @@ namespace UnityEngine.Reflect.Extensions
             eventDataCurrentPosition = new PointerEventData(EventSystem.current);
             eventDataCurrentPosition.position = touch;
             results = new List<RaycastResult>();
-            UnityEngine.EventSystems.EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+            EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
             return results.Count > 0;
         }
 
@@ -108,23 +107,33 @@ namespace UnityEngine.Reflect.Extensions
             {
                 // Clear the data and fields
                 DisableAndReset();
-                // Get new data
-                familyName = meta.GetParameter("Family");
-                manufacturerName = meta.GetParameter("Manufacturer");
-                modelName = meta.GetParameter("Model");
-                cost = meta.GetParameter("Cost");
-                var groups = meta.SortedByGroup();
-                if (groups.ContainsKey("Materials and Finishes"))
+
+                // Get new data and it to the list to display
+                var possibleGroups = meta.SortedByGroup();
+                foreach (string data in bimParametersToShow)
                 {
-                    var mats = groups["Materials and Finishes"];
-                    if (mats != null && mats.Count > 0)
+                    if (!string.IsNullOrEmpty(data))
                     {
-                        materials = new string[mats.Count];
-                        int i = 0;
-                        foreach (KeyValuePair<string, Metadata.Parameter> kvp in mats)
+                        if (possibleGroups.ContainsKey(data))
                         {
-                            materials[i] = kvp.Value.value;
-                            i++;
+                            var groupedData = possibleGroups[data];
+                            if (groupedData != null && groupedData.Count > 0)
+                            {
+                                // Add Header title to list
+                                bimDataToDisplay.Add(data);
+                                foreach (KeyValuePair<string, Metadata.Parameter> kvp in groupedData)
+                                {
+                                    bimDataToDisplay.Add("   " + kvp.Value.value);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            string thisData = meta.GetParameter(data);
+                            if (!string.IsNullOrEmpty(thisData))
+                            {
+                                bimDataToDisplay.Add(data+": " + thisData);
+                            }
                         }
                     }
                 }
@@ -167,12 +176,8 @@ namespace UnityEngine.Reflect.Extensions
             if (scrollView != null)
                 scrollView.gameObject.SetActive(false);
 
-            // Clear the fields
-            familyName = string.Empty;
-            manufacturerName = string.Empty;
-            modelName = string.Empty;
-            cost = string.Empty;
-            materials = null;
+            // Clear the BIM display list
+            bimDataToDisplay = new List<string>();
         }
 
         // Build the scoll menu
@@ -184,27 +189,9 @@ namespace UnityEngine.Reflect.Extensions
             scrollView.gameObject.SetActive(true);
             closeButton.gameObject.SetActive(true);
 
-            if (!string.IsNullOrEmpty(familyName))
+            foreach (string data in bimDataToDisplay)
             {
-                FillMenuItem("Family: " + familyName);
-            }
-            if (!string.IsNullOrEmpty(manufacturerName))
-            {
-                FillMenuItem("Manufacturer: " + manufacturerName);
-            }
-            if (!string.IsNullOrEmpty(modelName))
-            {
-                FillMenuItem("Model: " + modelName);
-            }
-            if (!string.IsNullOrEmpty(cost))
-            {
-                FillMenuItem("Cost: $" + cost);
-            }
-            if (materials != null)
-            {
-                FillMenuItem("Materials:");
-                foreach (string mat in materials)
-                    FillMenuItem(mat, true);
+                FillMenuItem(data);
             }
         }
 
@@ -256,7 +243,6 @@ namespace UnityEngine.Reflect.Extensions
                 {
                     if (reflectObject.gameObject.GetComponent<Collider>() == null)
                         reflectObject.gameObject.AddComponent<MeshCollider>();
-                    //coll.convex = true;
                     interactivityFound = true;
                     if (!interactableObjects.Contains(reflectObject))
                         interactableObjects.Add(reflectObject);
