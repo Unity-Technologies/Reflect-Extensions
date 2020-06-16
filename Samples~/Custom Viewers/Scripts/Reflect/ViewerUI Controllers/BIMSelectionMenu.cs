@@ -33,6 +33,9 @@ namespace UnityEngine.Reflect.Extensions
         [Tooltip("Parameter name to search for in Metadata component.\nIf this parameter's value is Yes then it can be selected.")]
         [SerializeField]
         string parameterName = "Interactable";
+        [Tooltip("Show the metadata for any object touched, not just the ones with the matching true Interactable parameter name")]
+        [SerializeField]
+        bool showEveryObjectTouched = false;
         Ray ray;
         const float ITEMSPACE = 30f;
         float y; //Menu item placement
@@ -45,6 +48,7 @@ namespace UnityEngine.Reflect.Extensions
         bool interactivityFound;
         PointerEventData eventDataCurrentPosition;
         List<RaycastResult> results;
+        List<GameObject> interactableObjects = new List<GameObject>();
 
         void OnEnable()
         {
@@ -79,7 +83,10 @@ namespace UnityEngine.Reflect.Extensions
                 if (Physics.Raycast(ray, out hit, raycastDistance))
                 {
                     if (hit.transform != null)
-                        GetMetadata(hit.transform);
+                    {
+                        if (showEveryObjectTouched || interactableObjects.Contains(hit.transform.gameObject))
+                            GetMetadata(hit.transform);
+                    }
                 }
             }
         }
@@ -232,6 +239,7 @@ namespace UnityEngine.Reflect.Extensions
         public void NotifyBeforeSearch()
         {
             interactivityFound = false;
+            interactableObjects = new List<GameObject>();
         }
 
         /// <summary>
@@ -246,9 +254,12 @@ namespace UnityEngine.Reflect.Extensions
                 // If yes to interactable then add collider
                 if (reflectObject.GetComponent<Renderer>() != null)
                 {
-                    var coll = reflectObject.gameObject.AddComponent<MeshCollider>();
-                    coll.convex = true;
+                    if (reflectObject.gameObject.GetComponent<Collider>() == null)
+                        reflectObject.gameObject.AddComponent<MeshCollider>();
+                    //coll.convex = true;
                     interactivityFound = true;
+                    if (!interactableObjects.Contains(reflectObject))
+                        interactableObjects.Add(reflectObject);
                 }
             }
         }
