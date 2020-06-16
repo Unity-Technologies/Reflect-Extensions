@@ -32,7 +32,8 @@ MonoBehaviour:
   - heading: Revit Parameter Name and Value
     text: 'In this viewer, the default name for the Revit parameter is Interactable.
       If you wish to change that in Revit, then put your new parameter name in the
-      Parameter Name field of the BIM Selection Menu script on the game object named:'
+      Parameter Name field of the BIM Selection Menu script. The BIM paramters displayed
+      in the selection menu at runtime can also be changed on the game object named:'
     linkText: BIM Selection Canvas
     url: 
   - heading: 
