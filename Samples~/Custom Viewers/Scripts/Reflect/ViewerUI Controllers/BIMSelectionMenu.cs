@@ -38,7 +38,7 @@ namespace UnityEngine.Reflect.Extensions
         bool showEveryObjectTouched = false;
         [Tooltip("BIM Parameter values you want to display in your menu when item is selected.")]
         [SerializeField]
-        List<string> bimParametersToShow;
+        List<string> bimParametersToShow = default;
         Ray ray;
         const float ITEMSPACE = 30f;
         float y; //Menu item placement
