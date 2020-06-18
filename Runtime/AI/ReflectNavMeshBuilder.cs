@@ -214,7 +214,7 @@ namespace UnityEngine.Reflect.Extensions.AI
 		}
 
 #if UNITY_EDITOR
-		[UnityEditor.MenuItem("GameObject/Reflect.Populate/NavMeshBuilder", false, 10)]
+		[UnityEditor.MenuItem("GameObject/Reflect Populate/NavMeshBuilder", false, 10)]
 		private static void CreateComponentHoldingGameObject(MenuCommand menuCommand)
 		{
 			var g = new GameObject("Reflect NavMesh Builder", new System.Type[1] { typeof(ReflectNavMeshBuilder) });

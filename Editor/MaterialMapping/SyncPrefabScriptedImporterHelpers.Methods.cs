@@ -44,7 +44,7 @@ namespace UnityEditor.Reflect.Extensions.MaterialMapping
             importer.GetRemaps(out remaps);
             switch(ReflectEditorPreferences.materialSearchMatchType)
             {
-                case MaterialsOverride.MatchType.A_Equals_B:
+                case MaterialMappings.MatchType.A_Equals_B:
                     foreach (KeyValuePair<string, Material> kvp in materials)
                     {
                         if (remaps.ContainsKey(kvp.Key) && remaps[kvp.Key] == null) // TODO : add an option to override existing materials ?
@@ -166,12 +166,12 @@ namespace UnityEditor.Reflect.Extensions.MaterialMapping
                 foreach (string guid in AssetDatabase.FindAssets("t:MaterialMappings", new string[] { "Assets/Reflect" }))
                 {
                     var remapper = AssetDatabase.LoadAssetAtPath<MaterialMappings>(AssetDatabase.GUIDToAssetPath(guid));
-                    if (remapper.enabled)
+                    //if (remapper.enabled)
                         remappers.Add(remapper);
                 }
 
                 // sort remaps by priority (to prioritize conflicting remaps)
-                remappers.Sort((a, b) => a.priority.CompareTo(b.priority));
+                //remappers.Sort((a, b) => a.priority.CompareTo(b.priority)); // UNDONE : multi-mappings assignment
 
                 // for every material names, loop through remaps to find an override
                 Dictionary<string, Material> remaps;
@@ -182,7 +182,7 @@ namespace UnityEditor.Reflect.Extensions.MaterialMapping
                     foreach (MaterialMappings remapper in remappers)
                     {
                         var remapperNames = remapper.materialNames;
-                        if (remapperNames.Contains(name) && (remaps[name] == null || remapper.overwrite))
+                        if (remapperNames.Contains(name)/* && (remaps[name] == null || remapper.overwrite)*/)
                         {
                             //Debug.Log(string.Format("{0} => {1}", name, remapper.materialRemaps[remapperNames.FindIndex(x => x == name)].remappedMaterial));
                             remaps[name] = remapper[remapperNames.FindIndex(x => x == name)].remappedMaterial;

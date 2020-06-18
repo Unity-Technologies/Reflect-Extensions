@@ -834,10 +834,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dcac309c6306c04f836e55278c5781c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _matchType: 1
   _mappings:
   - {fileID: 11400000, guid: 64960a65383f6194d9b2cf92b795edf7, type: 2}
-  _resources: 0
+  _resources: 1
   _streamingAssetBundles: 0
 --- !u!1 &5614780784562711522
 GameObject:

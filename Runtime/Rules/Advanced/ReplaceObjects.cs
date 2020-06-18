@@ -206,7 +206,7 @@ namespace UnityEngine.Reflect.Extensions.Rules.Advanced
         }
 
 #if UNITY_EDITOR
-        [UnityEditor.MenuItem("GameObject/Reflect.Populate/Replace Objects", false, 10)]
+        [UnityEditor.MenuItem("GameObject/Reflect Populate/Replace Objects", false, 10)]
         private static void CreateComponentHoldingGameObject(MenuCommand menuCommand)
         {
             var g = new GameObject("Reflect Replace Objects", new System.Type[1] { typeof(ReplaceObjects) });

@@ -141,7 +141,7 @@ namespace UnityEngine.Reflect.Extensions.Helpers
 		}
 
 #if UNITY_EDITOR
-		[UnityEditor.MenuItem ("GameObject/Reflect.Populate/Helpers/Verbose", false, 10)]
+		[UnityEditor.MenuItem ("GameObject/Reflect Populate/Helpers/Verbose", false, 10)]
 		private static void CreateComponentHoldingGameObject(UnityEditor.MenuCommand menuCommand)
 		{
 			if (FindObjectOfType<Verbose>() != null)

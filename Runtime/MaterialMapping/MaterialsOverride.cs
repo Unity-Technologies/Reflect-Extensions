@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using MatchType = UnityEngine.Reflect.Extensions.MaterialMapping.MaterialMappings.MatchType;
 #if ONLINE_ASSETBUNDLES
 using UnityEngine.Networking;
 #endif
@@ -16,28 +17,6 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
     [DisallowMultipleComponent]
     public class MaterialsOverride : MonoBehaviour
     {
-        /// <summary>
-        /// Method to match incoming Materials(A) with Mapping Names(B).
-        /// </summary>
-        public enum MatchType
-        {
-            /// <summary>
-            /// Material Name is the same as Mapping Name
-            /// </summary>
-            A_Equals_B,
-            /// <summary>
-            /// Material Name contains the Mapping Name
-            /// </summary>
-            A_Contains_B,
-            /// <summary>
-            /// Mapping Name contains the Material Name
-            /// </summary>
-            B_Contains_A
-        }
-
-        [Tooltip("Method to match incoming Materials(A) with Mapping Names(B).")]
-        [SerializeField] MatchType _matchType = default;
-
         [Tooltip("Material Mappings to assign material replacements.")]
         [SerializeField] List<MaterialMappings> _mappings = default;
 
@@ -82,11 +61,11 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
             if (_mappings.Count == 0)
                 return;
 
-            _mappings = (from item in _mappings
-                         where item.enabled
-                         select item).ToList();
+            //_mappings = (from item in _mappings
+            //             where item.enabled
+            //             select item).ToList();
 
-            _mappings.Sort((a, b) => a.priority.CompareTo(b.priority));
+            //_mappings.Sort((a, b) => a.priority.CompareTo(b.priority));
         }
 
         private void OnDestroy()
@@ -100,7 +79,7 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
             if (_resources)
             {
                 foreach (MaterialMappings mm in Resources.FindObjectsOfTypeAll<MaterialMappings>())
-                    if (mm.enabled && !_mappings.Contains(mm))
+                    if (/*mm.enabled && */!_mappings.Contains(mm))
                         _mappings.Add(mm);
             }
 
@@ -119,12 +98,12 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
                         return;
                     }
                     foreach (MaterialMappings mm in assetBundle.LoadAllAssets<MaterialMappings>())
-                        if (mm.enabled && !_mappings.Contains(mm))
+                        if (/*mm.enabled && */!_mappings.Contains(mm))
                             _mappings.Add(mm);
                 }
             }
 
-            _mappings.Sort((a, b) => a.priority.CompareTo(b.priority));
+            //_mappings.Sort((a, b) => a.priority.CompareTo(b.priority));
 
 #if ONLINE_ASSETBUNDLES
             // TODO : add support for multiple asset bundles using the bundle manifest
@@ -157,7 +136,7 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
                     //    //if (mm.enabled && !mappings.Contains(mm))
                     //    //    mappings.Add(mm);
                     //}
-                    mappings.Sort((a, b) => a.priority.CompareTo(b.priority));
+                    //mappings.Sort((a, b) => a.priority.CompareTo(b.priority));
                 }
             }
         }
@@ -166,28 +145,84 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
         private void SyncManager_InstanceAdded(SyncInstance instance)
         {
             instance.onObjectCreated += Instance_ObjectCreated;
+            instance.onObjectDestroyed += Instance_ObjectDestroyed;
+        }
+
+        Dictionary<SyncObjectBinding, List<Renderer>> _renderers = new Dictionary<SyncObjectBinding, List<Renderer>>();
+
+        int selection = 0;
+        public int Selection
+        {
+            get => selection;
+            set
+            {
+                var newSelection = value < 0 ? 0 : value >= _mappings.Count ? _mappings.Count - 1 : value;
+                if (selection == newSelection)
+                    return;
+                selection = newSelection;
+                ApplyRemapsToAll();
+            }
+        }
+        MaterialMappings currentMappings
+        {
+            get
+            {
+                if (_mappings.Count == 0)
+                    return null;
+                else
+                    return _mappings[selection];
+            }
+        }
+
+        void ApplyRemapsToAll()
+        {
+
+        }
+
+        private void OnEnable()
+        {
+            // TODO : go through all renderers and remap materials using current remapper
+        }
+
+        private void OnDisable()
+        {
+            // TODO : restore all renderers to their initial materials
+        }
+
+        private void Instance_ObjectDestroyed(SyncObjectBinding obj)
+        {
+            if (_renderers.ContainsKey(obj))
+                _renderers.Remove(obj);
         }
 
         private void Instance_ObjectCreated(SyncObjectBinding obj)
         {
-            foreach (Renderer renderer in obj.GetComponentsInChildren<Renderer>())
+            if (!_renderers.ContainsKey(obj))
+                _renderers.Add(obj, obj.GetComponentsInChildren<Renderer>().ToList());
+
+            if (!enabled || currentMappings == null)
+                return;
+
+            ApplyMappings(_renderers[obj], currentMappings);
+        }
+
+        void ApplyMappings(List<Renderer> renderers, MaterialMappings mappings)
+        {
+            foreach (Renderer renderer in renderers)
             {
                 Material[] mats = renderer.sharedMaterials;
                 for (int i = 0; i < mats.Length; i++)
                 {
                     var matName = mats[i].name;
-                    foreach (MaterialMappings remapper in _mappings)
+                    var remapperNames = mappings.materialNames;
+                    foreach (string mName in remapperNames)
                     {
-                        var remapperNames = remapper.materialNames;
-                        foreach (string mName in remapperNames)
+                        if (Match(matName, mName, mappings.matchType, mappings.matchCase))
                         {
-                            if (Match(matName, mName, _matchType))
-                            {
-                                var mat = remapper[remapperNames.FindIndex(x => x == mName)].remappedMaterial;
-                                if (mat != null)
-                                    mats[i] = mat;
-                                break;
-                            }
+                            var mat = mappings[remapperNames.FindIndex(x => x == mName)].remappedMaterial;
+                            if (mat != null)
+                                mats[i] = mat;
+                            break;
                         }
                     }
                 }
@@ -198,20 +233,18 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
         /// <summary>
         /// Compares Material Names and Mappings
         /// </summary>
-        /// <param name="materialName"></param>
-        /// <param name="mappingName"></param>
-        /// <param name="matchType"></param>
-        /// <returns></returns>
-        public static bool Match (string materialName, string mappingName, MatchType matchType)
+        public static bool Match (string materialName, string mappingName, MatchType matchType = MatchType.A_Equals_B, bool matchCase = false)
         {
+            string matName = matchCase ? materialName : materialName.ToLower();
+            string mapName = matchCase ? mappingName : mappingName.ToLower();
             switch (matchType)
             {
                 case MatchType.A_Equals_B:
-                    return materialName == mappingName;
+                    return matName == mapName;
                 case MatchType.A_Contains_B:
-                    return materialName.Contains(mappingName);
+                    return matName.Contains(mapName);
                 case MatchType.B_Contains_A:
-                    return mappingName.Contains(materialName);
+                    return matName.Contains(mapName);
                 default:
                     return false;
             }
