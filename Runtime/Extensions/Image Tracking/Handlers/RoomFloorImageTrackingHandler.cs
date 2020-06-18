@@ -39,7 +39,8 @@ namespace UnityEngine.Reflect.Extensions
         [Tooltip("The AR Session - there should only be one.")]
         [SerializeField] protected ARSession aRSession = default;
         [Tooltip("The AR Table Top Camera Controller component used for manipulating the AR camera in table top mode.")]
-        [SerializeField] protected UnityEngine.Reflect.Controller.Controller aRController = default;[Tooltip("The UI Gameobject with the find image target helper.")]
+        [SerializeField] protected UnityEngine.Reflect.Controller.Controller aRController = default;
+        [Tooltip("The UI Gameobject with the find image target helper.")]
         [SerializeField] protected GameObject targetHelper = default;
         [Tooltip("The AR Session Origin to be used by this tracking handler.")]
         [SerializeField] protected ARSessionOrigin sessionOrigin = default;

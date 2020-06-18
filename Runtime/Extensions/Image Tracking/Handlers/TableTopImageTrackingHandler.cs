@@ -176,8 +176,6 @@ namespace UnityEngine.Reflect.Extensions
             // Clean detach so no session resets call lost tracking if we were already in AR mode
             ImageTrackingManager.Instance.DetachTrackingHandler(this);
             HandleUI(true);
-            if (aRController != null)
-                aRController.enabled = true;
 
             inARImageTracking = true;
             // Call this manually to mask the camera
@@ -194,6 +192,9 @@ namespace UnityEngine.Reflect.Extensions
             // Turn off model view
             if (screenMode != null)
                 screenMode.SetActive(false);
+
+            if (aRController != null)
+                aRController.enabled = true;
 
             // Listen for tracking
             ImageTrackingManager.Instance.AttachTrackingHandler(this);
