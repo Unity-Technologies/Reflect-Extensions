@@ -1,13 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 using System.Linq;
 using UnityEngine.AI;
-using UnityEngine.Reflect;
-//using UnityEngine.Reflect.Services;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+using UnityEngine.Events;
+
+// TODO : handle project unloading
 
 namespace UnityEngine.Reflect.Extensions.AI
 {
@@ -16,14 +12,25 @@ namespace UnityEngine.Reflect.Extensions.AI
 	[RequireComponent (typeof(ReflectNavMeshBuilder))]
 	public class NavMeshScatterObjects : MonoBehaviour
 	{
+		[Serializable]
+		public class BoolEvent : UnityEvent<bool> { }
+
 		[Tooltip("Object to be instantiated.")]
 		[SerializeField] GameObject reference = default;
 
 		[Tooltip("# of copies")]
 		[SerializeField] int number = 100;
 
+		[Tooltip("Automatically Scatter Objects when NavMesh is Ready")]
+		[SerializeField] bool autoScatterWhenReady = default;
+
+		public BoolEvent onNavMeshReady;
+
 		Transform root;
 		bool done;
+
+		public int Number { get => number; set => number = value; }
+		public float NumberAsFloat { get => number; set => number = Mathf.RoundToInt(value); }
 
 		ReflectNavMeshBuilder _navMeshBuilder;
 		public ReflectNavMeshBuilder navMeshBuilder
@@ -39,11 +46,19 @@ namespace UnityEngine.Reflect.Extensions.AI
 		private void Awake()
 		{
 			navMeshBuilder.onNavMeshUpdated += NavMeshBuilder_onNavMeshUpdated;
-			//ReflectNavMeshBuilder.instance.onNavMeshUpdated += NavMeshBuilder_onNavMeshUpdated;
 		}
 
-		private void Scatter ()
+		public void DeleteScatteredObjects()
+        {
+			Destroy(root?.gameObject);
+			root = null;
+			done = false;
+        }
+
+		public void Scatter ()
 		{
+			DeleteScatteredObjects();
+
 			bool hasAgent = reference.GetComponent<NavMeshAgent>() != null;
 
 			root = (new GameObject(reference.name + "_root")).transform;
@@ -52,13 +67,11 @@ namespace UnityEngine.Reflect.Extensions.AI
 			for (int i = 0; i < number; i++)
 			{
 				Vector3 position;
-				Debug.Log(navMeshBuilder.RandomPoint(out position));
-				//Debug.Log(ReflectNavMeshBuilder.instance.RandomPoint(out position));
+				navMeshBuilder.RandomPoint(out position);
 				if (hasAgent)
 				{
 					Vector3 destination;
 					navMeshBuilder.RandomPoint(out destination);
-					//ReflectNavMeshBuilder.instance.RandomPoint(out destination);
 					NavMeshAgent agent = Instantiate(reference, position, Quaternion.Euler(0, Random.Range(-180f, 180f), 0), root).GetComponent<NavMeshAgent>();
 					agent.Warp(position);
 					if (agent.isActiveAndEnabled)
@@ -72,6 +85,7 @@ namespace UnityEngine.Reflect.Extensions.AI
 
 			done = true;
 		}
+
 		NavMeshHit hit;
 		private void UpdatePositions()
 		{
@@ -91,45 +105,22 @@ namespace UnityEngine.Reflect.Extensions.AI
 
 		private void NavMeshBuilder_onNavMeshUpdated()
 		{
+			onNavMeshReady?.Invoke(true);
+
 			if (!done)
-				Scatter();
+            {
+				if (autoScatterWhenReady)
+					Scatter();
+            }
 			else
+            {
 				UpdatePositions();
+            }
 		}
 
 		public void ToggleScatteredObjects (bool state)
 		{
 			root?.gameObject.SetActive(state);
 		}
-
-#if UNITY_EDITOR
-		//[UnityEditor.MenuItem("Reflect/Add NavMeshScatterObjects", false)]
-		//static private void AddNavMeshScatter()
-		//{
-		//	//NavMeshBuildSettings navMeshBuildSettings = NavMesh.GetSettingsByID(0);
-		//	//NavMeshBuildSettings navMeshBuildSettings = NavMesh.GetSettingsByIndex(0);
-		//	//navMeshBuildSettings.agentRadius = 0.2f;
-		//	//navMeshBuildSettings.agentHeight = 1.7f;
-		//	//navMeshBuildSettings.agentClimb = 0.2f;
-		//	//navMeshBuildSettings.agentSlope = 0.20f;
-
-		//	Transform rootTx = SyncHelpers.FindSyncManagerRootTransform();
-
-		//	if (rootTx == null)
-		//		return;
-
-		//	// add component with Undo
-		//	Undo.AddComponent<NavMeshScatterObjects>(rootTx.gameObject);
-
-		//	// select gameobject
-		//	Selection.activeGameObject = rootTx.gameObject;
-		//}
-
-		//[UnityEditor.MenuItem("Reflect/Add NavMeshScatterObjects", true)]
-		//static private bool AddNavMeshScatterValidate()
-		//{
-		//	return FindObjectOfType<SyncManager>() != null;
-		//}
-#endif
 	}
 }

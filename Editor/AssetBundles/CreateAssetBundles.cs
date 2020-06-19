@@ -14,7 +14,7 @@ namespace UnityEditor.Reflect.Extensions.AssetBundles
             }
             BuildPipeline.BuildAssetBundles(assetBundleDirectory,
                                             BuildAssetBundleOptions.None,
-                                            BuildTarget.StandaloneWindows);
+                                            BuildTarget.StandaloneWindows64);
         }
     }
 }

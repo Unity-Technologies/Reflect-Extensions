@@ -8,6 +8,7 @@ using UnityEditor;
 
 // TODO : use Reflect.Populate.Rules and replace Filter with Criteria
 // TODO : support for multiple custom Areas
+// TODO : handle project unloading
 
 namespace UnityEngine.Reflect.Extensions.AI
 {
@@ -15,7 +16,6 @@ namespace UnityEngine.Reflect.Extensions.AI
 	/// Builds and Refreshes a NavMesh on incoming geometry.
 	/// </summary>
 	[AddComponentMenu ("Reflect/AI/ReflectNavMeshBuilder")]
-	//[RequireComponent (typeof(ReflectEventsManager))] // UNDONE : now using Singleton
 	[DisallowMultipleComponent]
 	public class ReflectNavMeshBuilder : MonoBehaviour
 	{
@@ -40,6 +40,10 @@ namespace UnityEngine.Reflect.Extensions.AI
 		[SerializeField] bool isTrigger = false;
 
 		[Header("Navigation")]
+		
+		[Tooltip("Objects with No Metadata are Not Walkable.")]
+		[SerializeField] bool unknownIsNotWalkable = true;
+
 		[Tooltip("Ignore Objects by Metadata Key/Value")]
 		[SerializeField] Filter[] ignoreFilters = new Filter[2] {
 			new Filter ("Category", "Doors"),
@@ -159,7 +163,7 @@ namespace UnityEngine.Reflect.Extensions.AI
 				s.shape = NavMeshBuildSourceShape.Mesh;
 				s.sourceObject = m;
 				s.transform = _meshFilters[i].transform.localToWorldMatrix;
-				s.area = (mData && ContainsData(mData, notWalkable)) ? 1 : 0;
+				s.area = (mData && ContainsData(mData, notWalkable) || mData == null && unknownIsNotWalkable) ? 1 : 0;
 				_sources.Add(s);
 			}
 			UpdateNavMeshMesh();

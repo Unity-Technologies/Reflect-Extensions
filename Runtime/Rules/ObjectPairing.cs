@@ -17,6 +17,8 @@ namespace UnityEngine.Reflect.Extensions.Rules
         [SerializeField] private string _value = "Planting";
         [Tooltip("Scale Prefab so that its height matches the Height parameter found in Metadata (if present)")]
         [SerializeField] private bool _matchHeight = default;
+        [Tooltip("Minimum Height. 0 = no culling.")]
+        [SerializeField] private float _minHeight = 1.0f;
 
         SyncManager _syncManager;
         List<SyncObjectBinding.Identifier> _identifiers = new List<SyncObjectBinding.Identifier>();
@@ -133,8 +135,16 @@ namespace UnityEngine.Reflect.Extensions.Rules
 
             if (md.GetParameter(_key) == _value)
             {
+                if (_minHeight > 0 && md.parameters.dictionary.ContainsKey("Height"))
+                {
+                    var height = float.Parse(md.GetParameter("Height")) * 0.001f;
+                    if (height < _minHeight)
+                        return;
+                }
+
                 _identifiers.Add(obj.identifier);
                 _addedObjects[obj] = Instantiate(prefab, obj.transform.position, obj.transform.rotation, transform);
+
                 if (_matchHeight && md.parameters.dictionary.ContainsKey("Height"))
                 {
                     var height = float.Parse(md.GetParameter("Height")) * 0.001f;

@@ -29,7 +29,8 @@ public class RandomAudioPlayback : MonoBehaviour
             if (refreshAudioSources)
                 _sources = GetComponentsInChildren<AudioSource>();
 
-            _sources[Random.Range(0, _sources.Length)].PlayOneShot(clips[Random.Range(0, clips.Length)]);
+            if (_sources.Length != 0)
+                _sources[Random.Range(0, _sources.Length)].PlayOneShot(clips[Random.Range(0, clips.Length)]);
         }
     }
 }

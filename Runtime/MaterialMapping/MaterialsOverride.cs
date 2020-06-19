@@ -1,4 +1,5 @@
 ﻿//#define ONLINE_ASSETBUNDLES // UNDERWORK
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,8 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
         static MaterialsOverride instance;
         SyncManager _syncManager;
 
+        public List<MaterialMappings> Mappings { get => _mappings; }
+
         private void Awake()
         {
             // not a real 'Singleton', but there should only be one instance at a time.
@@ -58,14 +61,9 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
 
             _syncManager.onInstanceAdded += SyncManager_InstanceAdded;
 
-            if (_mappings.Count == 0)
-                return;
+            LoadExtraMappings();
 
-            //_mappings = (from item in _mappings
-            //             where item.enabled
-            //             select item).ToList();
-
-            //_mappings.Sort((a, b) => a.priority.CompareTo(b.priority));
+            enabled = false;
         }
 
         private void OnDestroy()
@@ -76,10 +74,15 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
 
         private void Start()
         {
+
+        }
+
+        private void LoadExtraMappings()
+        {
             if (_resources)
             {
-                foreach (MaterialMappings mm in Resources.FindObjectsOfTypeAll<MaterialMappings>())
-                    if (/*mm.enabled && */!_mappings.Contains(mm))
+                foreach (MaterialMappings mm in Resources.LoadAll<MaterialMappings>(""))
+                        if (!_mappings.Contains(mm))
                         _mappings.Add(mm);
             }
 
@@ -92,18 +95,20 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
                 foreach (string bundleName in bundles)
                 {
                     var assetBundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, bundleName));
+                    
                     if (assetBundle == null)
                     {
                         Debug.LogWarning(string.Format("Failed to load AssetBundle from {0}!", bundleName));
                         return;
                     }
+                    
                     foreach (MaterialMappings mm in assetBundle.LoadAllAssets<MaterialMappings>())
-                        if (/*mm.enabled && */!_mappings.Contains(mm))
+                        if (!_mappings.Contains(mm))
                             _mappings.Add(mm);
+
+                    assetBundle.Unload(false);
                 }
             }
-
-            //_mappings.Sort((a, b) => a.priority.CompareTo(b.priority));
 
 #if ONLINE_ASSETBUNDLES
             // TODO : add support for multiple asset bundles using the bundle manifest
@@ -149,6 +154,7 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
         }
 
         Dictionary<SyncObjectBinding, List<Renderer>> _renderers = new Dictionary<SyncObjectBinding, List<Renderer>>();
+        Dictionary<Renderer, Material[]> _originalMaterials = new Dictionary<Renderer, Material[]>();
 
         int selection = 0;
         public int Selection
@@ -163,6 +169,7 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
                 ApplyRemapsToAll();
             }
         }
+
         MaterialMappings currentMappings
         {
             get
@@ -174,31 +181,65 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
             }
         }
 
+        [ContextMenu("Apply Current Mappings")]
         void ApplyRemapsToAll()
         {
+            if (currentMappings != null)
+                ApplyMappings(_originalMaterials.Keys.ToList(), currentMappings);
+        }
 
+        bool isOn = true;
+        bool IsOn
+        {
+            get => isOn;
+            set
+            {
+                if (isOn == value)
+                    return;
+                isOn = enabled = value && currentMappings != null;
+
+                if (isOn)
+                    ApplyRemapsToAll();
+                else
+                    RestoreOriginals();
+            }
         }
 
         private void OnEnable()
         {
-            // TODO : go through all renderers and remap materials using current remapper
+            IsOn = true;
         }
 
         private void OnDisable()
         {
-            // TODO : restore all renderers to their initial materials
+            IsOn = false;
         }
 
         private void Instance_ObjectDestroyed(SyncObjectBinding obj)
         {
+            foreach (Renderer renderer in _renderers[obj])
+                _originalMaterials.Remove(renderer);
+
             if (_renderers.ContainsKey(obj))
                 _renderers.Remove(obj);
         }
 
         private void Instance_ObjectCreated(SyncObjectBinding obj)
         {
+            var renderers = obj.GetComponentsInChildren<Renderer>();
+
             if (!_renderers.ContainsKey(obj))
-                _renderers.Add(obj, obj.GetComponentsInChildren<Renderer>().ToList());
+                _renderers.Add(obj, renderers.ToList());
+
+            foreach (Renderer renderer in renderers)
+            {
+                if (!_originalMaterials.ContainsKey(renderer))
+                {
+                    Material[] materials = new Material[renderer.sharedMaterials.Length];
+                    Array.Copy(renderer.sharedMaterials, materials, renderer.sharedMaterials.Length);
+                    _originalMaterials.Add(renderer, materials);
+                }
+            }
 
             if (!enabled || currentMappings == null)
                 return;
@@ -206,23 +247,63 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
             ApplyMappings(_renderers[obj], currentMappings);
         }
 
+        [ContextMenu("Restore Originals")]
+        void RestoreOriginals()
+        {
+            foreach (KeyValuePair<Renderer, Material[]> kvp in _originalMaterials)
+                kvp.Key.sharedMaterials = kvp.Value;
+        }
+
+        [ContextMenu("Cycle Up")]
+        void CycleUp()
+        {
+            Selection++;
+        }
+
+        [ContextMenu("Cycle Down")]
+        void CycleDown()
+        {
+            Selection--;
+        }
+
         void ApplyMappings(List<Renderer> renderers, MaterialMappings mappings)
         {
             foreach (Renderer renderer in renderers)
             {
-                Material[] mats = renderer.sharedMaterials;
+                if (!_originalMaterials.ContainsKey(renderer))
+                    Debug.LogWarning("Renderer Not Found!");
+
+                var remapperNames = mappings.materialNames;
+                //Material[] mats = _originalMaterials[renderer];
+                Material[] mats = new Material[_originalMaterials[renderer].Length];
+                Array.Copy(_originalMaterials[renderer], mats, _originalMaterials[renderer].Length);
+
                 for (int i = 0; i < mats.Length; i++)
                 {
                     var matName = mats[i].name;
-                    var remapperNames = mappings.materialNames;
+                    bool replaced = false;
                     foreach (string mName in remapperNames)
                     {
                         if (Match(matName, mName, mappings.matchType, mappings.matchCase))
                         {
-                            var mat = mappings[remapperNames.FindIndex(x => x == mName)].remappedMaterial;
+                            var mat = mappings[remapperNames.FindIndex(x => x == mName)].remappedMaterial; // TODO : handle matchCase
                             if (mat != null)
+                            {
                                 mats[i] = mat;
-                            break;
+                                replaced = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!replaced)
+                    {
+                        if (mats[i].shader.name.ToLower().Contains("transparent") && mappings.DefaultTransparentMaterial != null)
+                        {
+                            mats[i] = mappings.DefaultTransparentMaterial;
+                        }
+                        else if (mappings.DefaultOpaqueMaterial != null)
+                        {
+                            mats[i] = mappings.DefaultOpaqueMaterial;
                         }
                     }
                 }
@@ -235,16 +316,17 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
         /// </summary>
         public static bool Match (string materialName, string mappingName, MatchType matchType = MatchType.A_Equals_B, bool matchCase = false)
         {
-            string matName = matchCase ? materialName : materialName.ToLower();
-            string mapName = matchCase ? mappingName : mappingName.ToLower();
+            if (materialName.Contains("SyncMaterial"))
+                materialName = materialName.Substring(10, materialName.Length - 23);
+
             switch (matchType)
             {
                 case MatchType.A_Equals_B:
-                    return matName == mapName;
+                    return matchCase ? materialName == mappingName : materialName.ToLower() == mappingName.ToLower();
                 case MatchType.A_Contains_B:
-                    return matName.Contains(mapName);
+                    return matchCase ? mappingName.Contains(materialName) : mappingName.ToLower().Contains(materialName.ToLower());
                 case MatchType.B_Contains_A:
-                    return matName.Contains(mapName);
+                    return matchCase ? materialName.Contains(mappingName) : materialName.ToLower().Contains(mappingName.ToLower());
                 default:
                     return false;
             }

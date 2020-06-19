@@ -44,10 +44,6 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
             B_Contains_A
         }
 
-        //[SerializeField] bool _enabled = true;
-        //[SerializeField] int _priority = 0;
-        //[SerializeField] bool _overwrite = false;
-
         [Tooltip("Method to match incoming Materials(A) with Mapping Names(B).")]
         [SerializeField] MatchType _matchType = default;
         [SerializeField] bool _matchCase = false;
@@ -60,9 +56,7 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
         public static MaterialMappings CreateInstance (Material[] materials)
         {
             var instance = CreateInstance<MaterialMappings>();
-            //instance._enabled = true;
-            //instance._priority = 0;
-            //instance._overwrite = false;
+
             instance._materialRemaps = new MaterialRemap[materials.Length];
             for (int i = 0; i < materials.Length; i++)
                 instance._materialRemaps[i] = new MaterialRemap(materials[i].name, materials[i]);
@@ -72,9 +66,7 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
         public static MaterialMappings CreateInstance (Dictionary<string, Material> remaps)
         {
             var instance = CreateInstance<MaterialMappings>();
-            //instance._enabled = true;
-            //instance._priority = 0;
-            //instance._overwrite = false;
+
             instance._materialRemaps = new MaterialRemap[remaps.Count];
             var names = remaps.Keys.ToList();
             for (int i = 0; i < names.Count; i++)
@@ -85,18 +77,16 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
         public static MaterialMappings CreateInstance (MaterialRemap[] remaps)
         {
             var instance = CreateInstance<MaterialMappings>();
-            //instance._enabled = true;
-            //instance._priority = 0;
-            //instance._overwrite = false;
+
             instance._materialRemaps = remaps;
             return instance;
         }
 
         public MatchType matchType { get => _matchType; }
         public bool matchCase { get => _matchCase; }
-        //public bool enabled { get => _enabled; }
-        //public int priority { get => _priority; }
-        //public bool overwrite { get => _overwrite; }
+
+        public Material DefaultOpaqueMaterial { get => _defaultOpaqueMaterial; }
+        public Material DefaultTransparentMaterial { get => _defaultTransparentMaterial; }
 
         public MaterialRemap this[int index]
         {
