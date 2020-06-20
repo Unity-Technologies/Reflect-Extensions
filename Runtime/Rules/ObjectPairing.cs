@@ -19,6 +19,8 @@ namespace UnityEngine.Reflect.Extensions.Rules
         [SerializeField] private bool _matchHeight = default;
         [Tooltip("Minimum Height. 0 = no culling.")]
         [SerializeField] private float _minHeight = 1.0f;
+        [Tooltip("Random Y Rotation Range.")]
+        [SerializeField] [Range(0f, 180f)] private float _rotationY_randomness = 0.0f;
 
         SyncManager _syncManager;
         List<SyncObjectBinding.Identifier> _identifiers = new List<SyncObjectBinding.Identifier>();
@@ -143,7 +145,7 @@ namespace UnityEngine.Reflect.Extensions.Rules
                 }
 
                 _identifiers.Add(obj.identifier);
-                _addedObjects[obj] = Instantiate(prefab, obj.transform.position, obj.transform.rotation, transform);
+                _addedObjects[obj] = Instantiate(prefab, obj.transform.position, obj.transform.rotation * Quaternion.Euler(0, Random.Range(-_rotationY_randomness, _rotationY_randomness), 0), transform);
 
                 if (_matchHeight && md.parameters.dictionary.ContainsKey("Height"))
                 {
