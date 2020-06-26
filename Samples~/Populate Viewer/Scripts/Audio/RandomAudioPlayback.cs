@@ -20,16 +20,26 @@ public class RandomAudioPlayback : MonoBehaviour
         enabled = clips.Length != 0;
     }
 
-    IEnumerator Start()
+    IEnumerator Start ()
     {
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(interval_min, interval_max));
+            //Debug.Log(Time.time);
+            var interval = Random.Range(interval_min, interval_max);
 
             if (refreshAudioSources)
                 _sources = GetComponentsInChildren<AudioSource>();
 
-            _sources[Random.Range(0, _sources.Length)].PlayOneShot(clips[Random.Range(0, clips.Length)]);
+            if (_sources.Length != 0)
+                _sources[Random.Range(0, _sources.Length)].PlayOneShot(clips[Random.Range(0, clips.Length)]);
+
+            yield return new WaitForSeconds(interval);
+            //yield return new WaitForSecondsRealtime(interval);
         }
+    }
+
+    private void OnEnable()
+    {
+        StartCoroutine(Start());
     }
 }

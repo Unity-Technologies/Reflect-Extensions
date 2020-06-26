@@ -10,21 +10,33 @@ namespace UnityEditor.Reflect.Extensions.MaterialMapping
     public class MaterialMappingsEditor : Editor
     {
         SerializedProperty enabledProperty;
-        SerializedProperty priorityProperty;
+        //SerializedProperty priorityProperty;
         SerializedProperty overwriteProperty;
+        SerializedProperty matchTypeProperty;
+        SerializedProperty matchCaseProperty;
+        SerializedProperty defaultOpaqueMaterialProperty;
+        SerializedProperty defaultTransparentMaterialProperty;
         SerializedProperty materialRemapsProperty;
 
         GUIContent emptyLabel = new GUIContent("");
-        GUIContent priorityLabel = new GUIContent("Priority");
-        GUIContent overwriteLabel = new GUIContent("Overwrite");
-        GUIContent enabledLabel = new GUIContent("Enabled");
+        //GUIContent enabledLabel = new GUIContent("Enabled");
+        //GUIContent priorityLabel = new GUIContent("Priority");
+        //GUIContent overwriteLabel = new GUIContent("Overwrite");
+        GUIContent matchTypeLabel = new GUIContent("Match Type");
+        GUIContent matchCaseLabel = new GUIContent("Match Case");
+        GUIContent defaultOpaqueMaterialLabel = new GUIContent("Default Opaque Material");
+        GUIContent defaultTransparentMaterialLabel = new GUIContent("Default Transparent Material");
         GUIStyle boldLabel;
 
         private void OnEnable()
         {
-            enabledProperty = serializedObject.FindProperty("_enabled");
-            priorityProperty = serializedObject.FindProperty("_priority");
-            overwriteProperty = serializedObject.FindProperty("_overwrite");
+            //enabledProperty = serializedObject.FindProperty("_enabled");
+            //priorityProperty = serializedObject.FindProperty("_priority");
+            //overwriteProperty = serializedObject.FindProperty("_overwrite");
+            matchTypeProperty = serializedObject.FindProperty("_matchType");
+            matchCaseProperty = serializedObject.FindProperty("_matchCase");
+            defaultOpaqueMaterialProperty = serializedObject.FindProperty("_defaultOpaqueMaterial");
+            defaultTransparentMaterialProperty = serializedObject.FindProperty("_defaultTransparentMaterial");
             materialRemapsProperty = serializedObject.FindProperty("_materialRemaps");
         }
 
@@ -33,9 +45,13 @@ namespace UnityEditor.Reflect.Extensions.MaterialMapping
             if (boldLabel == null)
                 boldLabel = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold };
 
-            EditorGUILayout.PropertyField(enabledProperty, enabledLabel);
-            EditorGUILayout.PropertyField(priorityProperty, priorityLabel);
-            EditorGUILayout.PropertyField(overwriteProperty, overwriteLabel);
+            //EditorGUILayout.PropertyField(enabledProperty, enabledLabel);
+            //EditorGUILayout.PropertyField(priorityProperty, priorityLabel);
+            //EditorGUILayout.PropertyField(overwriteProperty, overwriteLabel);
+            EditorGUILayout.PropertyField(matchTypeProperty, matchTypeLabel);
+            EditorGUILayout.PropertyField(matchCaseProperty, matchCaseLabel);
+            EditorGUILayout.PropertyField(defaultOpaqueMaterialProperty, defaultOpaqueMaterialLabel);
+            EditorGUILayout.PropertyField(defaultTransparentMaterialProperty, defaultTransparentMaterialLabel);
 
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Material Mappings", boldLabel);

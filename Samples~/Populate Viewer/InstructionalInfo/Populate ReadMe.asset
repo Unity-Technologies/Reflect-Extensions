@@ -16,65 +16,56 @@ MonoBehaviour:
   title: Adding life to the Reflect Viewer
   sections:
   - heading: 
-    text: This viewer builds on top of the default Reflect viewer by adding a button,
-      top menu and controllers to the UI game objects in the menu under the Canvas
+    text: This viewer builds on top of the default Reflect viewer by adding buttons,
+      top menus and controllers to the UI game objects in the menu under the Canvas
       game object. The following is an overview for getting a custom feature like
-      construction timeline sequencing implemented from Revit into your viewer.
+      replacing RPC and trees, switching BIM lights, overriding materials and spawning characters using AI Path Finding.
     linkText: 
     url: 
-  - heading: Custom Parameters in Revit
-    text: 'Create a custom parameter in Revit and assign it to every family that
-      you want to be phased in and out as the timeline is moved. This behavior can
-      be changed in the script:'
-    linkText: CompletionDateSlider.cs
-    url: CompletionDateSlider
-  - heading: Revit Parameter Name and Value
-    text: 'In this viewer, the default name for the Revit parameter is Completion
-      Target. If you wish to change that in Revit, then put your new parameter name
-      in the Parameter Name field of the Completion Date Slider component on the
-      gameobject named:'
-    linkText: Completion Canvas
-    url: 
-  - heading: In the Viewer
-    text: When you run the viewer, a clock icon button becomes available in the lower
-      right of the user interface. Touch that button to turn on the timeline slider.
-      Touch it again to turn the slider off. The text value you give for this parameter
-      in Revit will then be converted to a date value and used for the slider. The
-      text representation of that date is what is displayed. In the photo above in
-      the heading of this window and linked below, you can an example of what to
-      expect.
-    linkText: Sequencing Snapshot
-    url: TimelineSample t:Texture2D
-  - heading: Metadata Searches
-    text: "The Revit metadata is found at runtime by using the Metadata component
-      that will be created on each of the model\u2019s game objects at runtime. You
-      can see what this will look like in play mode or by importing your Revit model
-      into the project via the Reflect window."
-    linkText: Unity Reflect Learn Tutorial
-    url: https://learn.unity.com/project/importing-assets-into-unity-with-reflect?courseId=5dd58fc1edbc2a001f5b0b32
-  - heading: 
-    text: 'There are various techniques that can be used to search and deliver results
-      from the Metadata component. I created a Reflect Metadata Manager script component
-      which is found on the gameobject named:'
-    linkText: Managers
+  - heading: BIM Lights Toggle
+    text: Reflect imports lights from the BIM and instantiates Unity light objects as children of the BIM light objects,
+    all under the Root object. This simple script will toggle all lights in the hierarchy:
+    linkText: LightsControls.cs
+    url: LightsControls
+  - heading: Daylight & Wind
+    text: 'This viewer contains a Daylight Rig, made of a Directional Light animated over time using Timeline,
+    which also animates the Ambient Color:'
+    linkText: Daylight
     url: 
   - heading: 
-    text: 'This manager consolidates the various components that want to search for
-      metadata into one appropriately timed search through the model and then sends
-      targeted matches to components that have attached itself to the manager. An
-      example Search Group can be found in an editor sample search which is found
-      in the editor script file called:'
-    linkText: MetadataEditorExplorer.cs
-    url: MetadataEditorExplorer
-  - heading: 
-    text: To see the sample window in action, bring your Reflect imported model into
-      the scene and then
-    linkText: Launch the sample editor window
-    url: ExecuteMenuItem:Reflect/Sample Metadata Explorer
-  - heading: Branded Viewer
-    text: 'The logo displayed in the viewer can be changed by adding a new photo
-      (png, jpg, etc) to the project, changing the Texture Type to Sprite (2D and
-      UI), and then switching out the Image on the game object named:'
-    linkText: Brand Logo
+    text: 'There is also a WindZone, which influences trees, and Clouds:'
+    linkText: WindZone
     url: 
+  - heading: 
+    text: 'Both Daylight and WindZone controls are linked to sliders in the Daylight Canvas:'
+    linkText: Daylight Canvas
+    url: 
+  - heading: Materials Override
+    text: The Materials Override component added on the Sync Root will let you override all materials with Material Mappings.
+    The Material Mappings can be created in the Editor, and then assigned to the component, or simplay put in a Resources folder,
+    or put in AssetBundles to be added to a pre-built Runtime.
+    linkText: Root
+    url: 
+  - heading: 
+    text: The White Boxing mappings in the Resources folder will replace all 
+    opaque objects with a white material and all transparent material with glass.
+    linkText: White Boxing Mappings
+    url: White Boxing
+  - heading: Characters
+    text: "The Characters object uses two scripts. One to generate a NavMesh once the Reflect model was loaded or updated.
+    And another to randomly instantiate objects (Ethan Character). The instantiation parameters are exposed in the Characters Canvas."
+    linkText: Characters
+    url: 
+  - heading: Replacing Trees
+    text: 'The ObjectPairing script will replace Trees with a SpeedTree Broadleaf prefab, matching their scale in incoming height:'
+    linkText: Trees
+    url: 
+  - heading: Custom Objects (AssetBundles)
+    text: 'Custom Objects can be packed in AssetBundles, then loaded and instantiated in place of Revit objects with custom parameters.'
+    linkText: Asset Bundles
+    url: 
+  - heading: 
+    text: 'A custom Revit family is included for reference.'
+    linkText: AssetBundle.rfa
+    url: AssetBundle
   loadedLayout: 1

@@ -55,7 +55,12 @@ namespace UnityEngine.Reflect.Extensions.AI
 			navMeshDisplayColorsTable = new Color[numberOfAreas];
 			for (int i = 0; i < numberOfAreas; i++)
 				navMeshDisplayColorsTable[i] = navMeshDisplayColors.Evaluate(Mathf.InverseLerp(0, numberOfAreas, i));
-			Debug.Log(numberOfAreas);
+			//Debug.Log(numberOfAreas);
+		}
+
+		public void ForceUpdateDisplayMesh()
+        {
+			OnReflectNavMeshUpdated();
 		}
 		
 		//private void OnRenderObject() // TODO : doesn't z-test nicely

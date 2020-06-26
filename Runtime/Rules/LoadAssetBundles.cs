@@ -149,6 +149,7 @@ namespace UnityEngine.Reflect.Extensions.Rules
                     _prefabLibrary.Add(target, prefab);
                     _identifiers.Add(obj.identifier);
                     _addedObjects[obj] = Instantiate(prefab, obj.transform.position, obj.transform.rotation, transform);
+                    assetBundle.Unload(false);
                 }
             }
         }

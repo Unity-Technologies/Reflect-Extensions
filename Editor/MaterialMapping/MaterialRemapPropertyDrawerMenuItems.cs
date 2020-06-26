@@ -52,6 +52,11 @@ namespace UnityEditor.Reflect.Extensions.MaterialMapping
                     SyncPrefabScriptedImporterHelpers.FindMaterialsForSyncPrefabImporter(importer);
                 });
 
+                menu.AddItem(new GUIContent("White Box"), false, () =>
+                {
+                    SyncPrefabScriptedImporterHelpers.WhiteBoxSyncPrefabImporter(importer);
+                });
+
                 //menu.AddItem(new GUIContent("Sort"), false, () =>
                 //{
                 //    SyncPrefabScriptedImporterHelpers.SortRemaps(importer);

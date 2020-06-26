@@ -46,9 +46,9 @@ namespace UnityEditor.Reflect.Extensions.MaterialMapping
             private set => EditorPrefs.SetInt("Reflect:extractedMaterialsConverionMethod", (int)value);
         }
 
-        public static MaterialsOverride.MatchType materialSearchMatchType
+        public static MaterialMappings.MatchType materialSearchMatchType
         {
-            get => (MaterialsOverride.MatchType)EditorPrefs.GetInt("Reflect:materialSearchMatchType", 0);
+            get => (MaterialMappings.MatchType)EditorPrefs.GetInt("Reflect:materialSearchMatchType", 0);
             private set => EditorPrefs.SetInt("Reflect:materialSearchMatchType", (int)value);
         }
 
@@ -158,7 +158,7 @@ namespace UnityEditor.Reflect.Extensions.MaterialMapping
                         label = "Material Search Match Type",
                         tooltip = "Method to match found Materials Names(A) with Mapping Names(B)."
                     };
-                    materialSearchMatchType_sel.RegisterValueChangedCallback(v => materialSearchMatchType = (MaterialsOverride.MatchType)v.newValue);
+                    materialSearchMatchType_sel.RegisterValueChangedCallback(v => materialSearchMatchType = (MaterialMappings.MatchType)v.newValue);
                     materialSearchMatchType_sel.AddToClassList("property-value");
 
                     // ADDING PROPERTIES

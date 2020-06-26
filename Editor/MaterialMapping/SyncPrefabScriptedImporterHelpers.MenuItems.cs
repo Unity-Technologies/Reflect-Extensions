@@ -33,11 +33,18 @@ namespace UnityEditor.Reflect.Extensions.MaterialMapping
             FindMaterialsForSyncPrefabImporter(AssetDatabase.GUIDToAssetPath(Selection.assetGUIDs[0]));
         }
 
+        [MenuItem("Assets/Reflect/White Box")]
+        static void WhiteBoxSelectedSyncPrefabImporter()
+        {
+            WhiteBoxSyncPrefabImporter(AssetDatabase.GUIDToAssetPath(Selection.assetGUIDs[0]));
+        }
+
         [MenuItem("Assets/Reflect/Apply Generic Mappings", true)]
         [MenuItem("Assets/Reflect/Sort Mappings", true)]
         [MenuItem("Assets/Reflect/Reset Mappings", true)]
         [MenuItem("Assets/Reflect/Extract Materials", true)]
         [MenuItem("Assets/Reflect/Find Materials", true)]
+        [MenuItem("Assets/Reflect/White Box", true)]
         static bool SelectionFirstGuidIsSyncPrefabScriptedImporter()
         {
             return Selection.assetGUIDs.Length == 1 &&

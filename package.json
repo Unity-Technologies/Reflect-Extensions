@@ -1,8 +1,8 @@
 {
   "name": "com.unity.reflect.extensions",
   "displayName": "Reflect Extensions",
-  "version": "0.1.0-preview.1",
-  "unity": "2019.2",
+  "version": "1.1.0-preview.1",
+  "unity": "2019.3",
   "description": "Runtime components and Editor tools to make the most of Unity Reflect.",
   "author": {
     "name": "Unity AEC Team",
@@ -43,6 +43,11 @@
       "displayName": "Unity Reflect Bolt Graphs",
       "description": "This requires Unity Bolt (Visual Scripting Extension).",
       "path": "Samples~/Bolt Graphs"
+    },
+    {
+      "displayName" : "Video Streaming Bootstrap",
+      "description" : "Allows for starting a Runtime with an Intro Video to engage the user while loading content.",
+      "path" : "Samples~/VideoStreamingBootstrap"
     }
   ]
 }

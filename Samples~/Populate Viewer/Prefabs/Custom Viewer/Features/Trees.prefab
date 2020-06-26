@@ -48,6 +48,8 @@ MonoBehaviour:
   _key: Category
   _value: Planting
   _matchHeight: 1
+  _minHeight: 1.4
+  _rotationY_randomness: 180
 --- !u!114 &7022335876770792529
 MonoBehaviour:
   m_ObjectHideFlags: 0
