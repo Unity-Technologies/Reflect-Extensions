@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   addMeshColliders: 1
   isTrigger: 0
+  unknownIsNotWalkable: 1
   ignoreFilters:
   - key: Category
     value: Doors
@@ -65,9 +66,7 @@ MonoBehaviour:
   - key: Category
     value: Furniture
   - key: Category
-    value: Site
-  - key: Category
-    value: Planting
+    value: Roofs
   - key: Category
     value: Roofs
 --- !u!114 &4367140291206932970
@@ -85,3 +84,7 @@ MonoBehaviour:
   reference: {fileID: 6132271927596226194, guid: b3279a0bff86b3a4a94601a3bf9b5c31,
     type: 3}
   number: 100
+  autoScatterWhenReady: 0
+  onNavMeshReady:
+    m_PersistentCalls:
+      m_Calls: []

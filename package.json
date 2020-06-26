@@ -45,9 +45,9 @@
       "path": "Samples~/Bolt Graphs"
     },
     {
-      "" : "Video Streaming Bootstrap",
-      "" : "Allows for starting a Runtime with an Intro Video to engage the user while loading content.",
-      "" : "Samples~/VideoStreamingBootstrap"
+      "displayName" : "Video Streaming Bootstrap",
+      "description" : "Allows for starting a Runtime with an Intro Video to engage the user while loading content.",
+      "path" : "Samples~/VideoStreamingBootstrap"
     }
   ]
 }

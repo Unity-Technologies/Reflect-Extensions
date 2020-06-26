@@ -31,6 +31,7 @@ namespace UnityEngine.Reflect.Extensions.AI
 
 		public int Number { get => number; set => number = value; }
 		public float NumberAsFloat { get => number; set => number = Mathf.RoundToInt(value); }
+		public string NumberAsString { get => number.ToString(); set => number = int.Parse(value); }
 
 		ReflectNavMeshBuilder _navMeshBuilder;
 		public ReflectNavMeshBuilder navMeshBuilder
