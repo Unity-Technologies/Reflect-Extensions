@@ -185,7 +185,8 @@ namespace UnityEditor.Reflect.Extensions
             if (ids.Length > 0)
             {
                 var readmeObject = AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(ids[0]));
-                Selection.objects = new UnityEngine.Object[] { readmeObject };
+                // UNDONE : let's highlight the object only so the user chooses to select it or stay on the ReadMe
+                //Selection.objects = new UnityEngine.Object[] { readmeObject };
                 EditorGUIUtility.PingObject(readmeObject);
             }
         }
@@ -206,11 +207,13 @@ namespace UnityEditor.Reflect.Extensions
 
             if (matchingObjects.Any())
             {
-                Selection.objects = matchingObjects.ToArray();
-                foreach (var o in Selection.objects)
-                {
-                    EditorGUIUtility.PingObject(o);
-                }
+                // UNDONE : let's highlight the object only so the user chooses to select it or stay on the ReadMe
+                //Selection.objects = matchingObjects.ToArray();
+                //foreach (var o in Selection.objects)
+                //{
+                //    EditorGUIUtility.PingObject(o);
+                //}
+                EditorGUIUtility.PingObject(matchingObjects.FirstOrDefault());
             }
         }
 
