@@ -1,6 +1,6 @@
 # Reflect Extensions
 
-## What is the Reflect Extesions package?
+## What is the Reflect Extensions package?
 
 This package is a series of both Runtime components and Editor tools developed by Reflect users. These can be used to easily customize and extend Reflect to your needs.
 
