@@ -69,6 +69,18 @@ namespace UnityEngine.Reflect.Extensions
                     Metadata meta = obj.GetComponent<Metadata>();
                     if (meta != null)
                     {
+                        // If the listener is looking for any value including empty or null parameters and the Metadata is empty(e.g. curtain walls)
+                        if (meta.GetParameters().Count == 0)
+                        {
+                            if (kvp.Value.value == reflectMetadataManager.AnyValue)
+                            {
+                                kvp.Key.NotifyObservers(obj);
+                                if (kvp.Value.oneNotification)
+                                    reflectMetadataManager.NotifySyncObjectCopy.Remove(kvp.Key); // So we do not notify again
+                            }
+                            continue;
+                        }
+
                         thisObjCreatedParameter = meta.GetParameter(kvp.Value.parameter);
                         if (!string.IsNullOrEmpty(thisObjCreatedParameter))
                         {

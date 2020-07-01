@@ -196,6 +196,18 @@ namespace UnityEngine.Reflect.Extensions
                         Metadata meta = tran.GetComponent<Metadata>();
                         if (meta != null)
                         {
+                            // If the listener is looking for any value including empty or null parameters and the Metadata is empty(e.g. curtain walls)
+                            if (meta.GetParameters().Count == 0)
+                            {
+                                if (kvp.Value.value == AnyValue)
+                                {
+                                    kvp.Key.NotifyObservers(tran.gameObject);
+                                    if (kvp.Value.oneNotification)
+                                        notifyRootCopy.Remove(kvp.Key); // So we do not notify again
+                                }
+                                continue;
+                            }
+
                             thisRootParameter = meta.GetParameter(kvp.Value.parameter);
                             if (!string.IsNullOrEmpty(thisRootParameter))
                             {
