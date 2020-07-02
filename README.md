@@ -13,17 +13,12 @@ Reflect Extensions is distributed without any garantee or support. It's meant to
 
 ## How do I install the Reflect Extensions?
 
-From the Package Manager, click on the + sign and select Add from Git.
+From the Package Manager, click on the + sign and select "Add package from git URL...", then paste one of the following urls.
 
-## Package structure
+For the latest version :
+https://github.com/Unity-Technologies/Reflect-Extensions.git
 
-```none
-<root>
-  ├── Editor
-  │   ├── CustomEditors
-  │   ├── Settings
-  │   └── SyncPrefabScriptedImporterExtensions
-  └──  Runtime
-      ├── Components
-      └── ScriptableObjects
-```
+For version 1.1.0-preview.1 (compatible with Reflect 1.1.0-preview.6 and tested with Unity 2019.4.1f1):
+https://github.com/Unity-Technologies/Reflect-Extensions.git##1.1.0-preview.1
+
+
