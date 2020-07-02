@@ -11,6 +11,10 @@ The components and tools are not maintained by the Reflect development team, and
 
 Reflect Extensions is distributed without any garantee or support. It's meant to inspire and help get started with Unity Reflect.
 
+## How do I install the Reflect Extensions?
+
+From the Package Manager, click on the + sign and select Add from Git.
+
 ## Package structure
 
 ```none
