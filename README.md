@@ -19,6 +19,6 @@ For the latest version :
 https://github.com/Unity-Technologies/Reflect-Extensions.git
 
 For version 1.1.0-preview.1 (compatible with Reflect 1.1.0-preview.6 and tested with Unity 2019.4.1f1):
-https://github.com/Unity-Technologies/Reflect-Extensions.git##1.1.0-preview.1
+https://github.com/Unity-Technologies/Reflect-Extensions.git#1.1.0-preview.1
 
 
