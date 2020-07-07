@@ -21,4 +21,29 @@ https://github.com/Unity-Technologies/Reflect-Extensions.git
 For version 1.1.0-preview.1 (compatible with Reflect 1.1.0-preview.6 and tested with Unity 2019.4.1f1):
 https://github.com/Unity-Technologies/Reflect-Extensions.git#1.1.0-preview.1
 
+## Features
 
+### Editor Tools
+#### Metadata Explorer
+The Metadata Explorer allows you to browse all Metadatas contained in a Scene that contains Reflect Sync Prefabs, and easily select objects matching key/value pair criterias.
+
+#### Search & Replace
+
+### Runtime Components
+
+## Samples
+
+### Custom Viewers
+Custom Reflect Viewers, including Reflect API samples and Unity features.
+
+### Populate Viewer
+Trees & RPCs replacements, Materials Remappings, Custom Family replacements, Sunlight, Clouds, Wind.
+
+### Editor Tools
+Custom Reflect Editor Tools, including Metadata Search & Replace.
+
+### Bolt Graphs
+This requires Unity Bolt (Visual Scripting Extension).
+
+### Video Streaming Bootstrap
+Allows for starting a Runtime with an Intro Video to engage the user while loading content.
