@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5d17a21594effb4e9591490b009e7aa, type: 3}
-  m_Name: bb0c79c9e4b5e114b898571a92320a2f_BundledAssetGroupSchema
+  m_Name: BundledAssetGroupSchema
   m_EditorClassIdentifier: 
   m_Group: {fileID: 11400000, guid: 6b5665b8ed4078d45aca6544489af506, type: 2}
   m_Compression: 1
