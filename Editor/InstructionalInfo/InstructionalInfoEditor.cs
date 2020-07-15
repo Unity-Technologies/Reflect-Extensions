@@ -8,15 +8,15 @@ using UnityEditor.SceneManagement;
 
 namespace UnityEditor.Reflect.Extensions
 {
-    [CustomEditor(typeof(ReadMe))]
+    [CustomEditor(typeof(InstructionalInfo))]
     [InitializeOnLoad]
-    class ReadMeEditor : Editor
+    class InstructionalInfoEditor : Editor
     {
 
-        static string kShowedReadmeSessionStateName = "ReadmeEditor.showedReadMe";
+        static string kShowedReadmeSessionStateName = "InstructionalInfoEditor.showedReadMe";
         static float kSpace = 16f;
 
-        static ReadMeEditor()
+        static InstructionalInfoEditor()
         {
             EditorApplication.delayCall += SelectReadmeAutomatically;
             EditorSceneManager.sceneOpened += ActiveSceneChange;
@@ -51,20 +51,20 @@ namespace UnityEditor.Reflect.Extensions
         }
 
         [MenuItem("Reflect/Custom Viewer Instructions %h")]
-        static ReadMe SelectReadme()
+        static InstructionalInfo SelectReadme()
         {
             var _scene = EditorSceneManager.GetActiveScene();
             var sceneNameParts = _scene.name.Split(' ');
 
             foreach (var s in sceneNameParts)
             {
-                string searchReadMe = s + " t:ReadMe";
+                string searchReadMe = s + " t:InstructionalInfo";
                 var ids = AssetDatabase.FindAssets(searchReadMe);
                 if (ids.Length > 0)
                 {
                     var readmeObject = AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(ids[0]));
                     Selection.objects = new UnityEngine.Object[] { readmeObject };
-                    return (ReadMe)readmeObject;
+                    return (InstructionalInfo)readmeObject;
                 }
             }
 
@@ -73,7 +73,7 @@ namespace UnityEditor.Reflect.Extensions
 
         protected override void OnHeaderGUI()
         {
-            var readme = (ReadMe)target;
+            var readme = (InstructionalInfo)target;
             Init();
 
             var iconWidth = Mathf.Min(EditorGUIUtility.currentViewWidth / 3f - 20f, 128f);
@@ -88,7 +88,7 @@ namespace UnityEditor.Reflect.Extensions
 
         public override void OnInspectorGUI()
         {
-            var readme = (ReadMe)target;
+            var readme = (InstructionalInfo)target;
             Init();
 
             foreach (var section in readme.sections)
