@@ -35,7 +35,7 @@
       "path": "Samples~/Populate Viewer"
     },
     {
-      "displayName": "Editor Tools",
+      "displayName": "Editor",
       "description": "Custom Reflect Editor Tools, including Metadata Search & Replace.",
       "path": "Samples~/Editor"
     },
@@ -47,7 +47,7 @@
     {
       "displayName" : "Video Streaming Bootstrap",
       "description" : "Allows for starting a Runtime with an Intro Video to engage the user while loading content.",
-      "path" : "Samples~/VideoStreamingBootstrap"
+      "path" : "Samples~/Video Streaming Bootstrap"
     }
   ]
 }
