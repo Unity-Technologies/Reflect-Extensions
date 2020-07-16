@@ -40,7 +40,7 @@
       "path": "Samples~/Editor"
     },
     {
-      "displayName": "Unity Reflect Bolt Graphs",
+      "displayName": "Bolt Graphs",
       "description": "This requires Unity Bolt (Visual Scripting Extension).",
       "path": "Samples~/Bolt Graphs"
     },
