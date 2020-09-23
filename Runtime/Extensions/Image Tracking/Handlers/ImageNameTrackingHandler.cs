@@ -35,6 +35,8 @@ namespace UnityEngine.Reflect.Extensions
         [SerializeField] ARSessionOrigin sessionOrigin = default;
         [Tooltip("The AR Camera to be used for this tracking handler.")]
         [SerializeField] Camera aRCamera = default;
+
+        ProjectionMatrixSetter projectionMatrixSetter;
         int showCameraMask;
         Transform targetLocationToBeUsed;
         bool inARImageTracking;
@@ -43,7 +45,10 @@ namespace UnityEngine.Reflect.Extensions
         {
             // Save initial values
             if (aRCamera != null)
+            {
                 showCameraMask = aRCamera.cullingMask;
+                projectionMatrixSetter = aRCamera.GetComponent<ProjectionMatrixSetter>();
+            }
         }
 
         void OnDisable()
@@ -194,6 +199,10 @@ namespace UnityEngine.Reflect.Extensions
                 aRSession.Reset();
             }
 
+            // Do not use AR Camera Manager projection matching
+            if (projectionMatrixSetter != null)
+                projectionMatrixSetter.StartMatchingProjection();
+
             // Turn off model view
             if (screenMode != null)
                 screenMode.SetActive(false);
@@ -215,6 +224,9 @@ namespace UnityEngine.Reflect.Extensions
                 if (screenMode != null)
                     screenMode.SetActive(true);
 
+                // Stop using AR Camera Manager projection matching
+                if (projectionMatrixSetter != null)
+                    projectionMatrixSetter.StopMatchingProjection();
                 // Set camera to show nothing
                 if (aRCamera != null)
                 {

@@ -40,6 +40,8 @@ namespace UnityEngine.Reflect.Extensions
         /// </summary>
         /// <value>Scale for the model on the target</value>
         public float ScaleForModelOnTarget { get => scaleForModelOnTarget; }
+
+        ProjectionMatrixSetter projectionMatrixSetter;
         int showCameraMask;
         float initialClippingPlane;
         Quaternion initialSessionOriginRotation;
@@ -55,6 +57,7 @@ namespace UnityEngine.Reflect.Extensions
             {
                 showCameraMask = aRCamera.cullingMask;
                 initialClippingPlane = aRCamera.farClipPlane;
+                projectionMatrixSetter = aRCamera.GetComponent<ProjectionMatrixSetter>();
             }
             if (sessionOrigin != null)
             {
@@ -196,6 +199,10 @@ namespace UnityEngine.Reflect.Extensions
             if (aRController != null)
                 aRController.enabled = true;
 
+            // Do not use AR Camera Manager projection matching
+            if (projectionMatrixSetter != null)
+                projectionMatrixSetter.StopMatchingProjection();
+
             // Listen for tracking
             ImageTrackingManager.Instance.AttachTrackingHandler(this);
         }
@@ -215,6 +222,9 @@ namespace UnityEngine.Reflect.Extensions
                 if (screenMode != null)
                     screenMode.SetActive(true);
 
+                // Turn off AR Camera Manager projection matching
+                if (projectionMatrixSetter != null)
+                    projectionMatrixSetter.StopMatchingProjection();
                 // Set camera to show nothing
                 if (aRCamera != null)
                 {

@@ -142,6 +142,7 @@ GameObject:
   - component: {fileID: 2676858497094736820}
   - component: {fileID: 2676858497094736823}
   - component: {fileID: 2676858497094735945}
+  - component: {fileID: 74031326627523775}
   m_Layer: 0
   m_Name: AR Camera Image Tracking
   m_TagString: Untagged
@@ -245,7 +246,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MaximumObjects: 0
-  m_SyncManager: {fileID: 0}
 --- !u!114 &2676858497094736820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,6 +341,19 @@ MonoBehaviour:
   desktopRotateAroundPivotSensitivity: 2
   touchPinchSensitivity: 4
   touchRotateAroundPivotSensitivity: 220
+--- !u!114 &74031326627523775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2676858497094736817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01bdd17961c79a445957f65d8f9b6f38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraManager: {fileID: 2676858497330884478}
 --- !u!1 &2676858497330884474
 GameObject:
   m_ObjectHideFlags: 0

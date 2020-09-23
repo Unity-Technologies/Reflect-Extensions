@@ -52,6 +52,7 @@ namespace UnityEngine.Reflect.Extensions
         /// <value>AR Camera</value>
         public Camera ArCamera { get => aRCamera; }
 
+        protected ProjectionMatrixSetter projectionMatrixSetter;
         protected int showCameraMask;
         protected Vector3 targetLocationToBeUsed;
         float xPos, zPos;
@@ -61,7 +62,10 @@ namespace UnityEngine.Reflect.Extensions
         {
             // Save initial values
             if (aRCamera != null)
+            {
                 showCameraMask = aRCamera.cullingMask;
+                projectionMatrixSetter = aRCamera.GetComponent<ProjectionMatrixSetter>();
+            }
         }
 
         void OnEnable()
@@ -199,6 +203,10 @@ namespace UnityEngine.Reflect.Extensions
                 aRSession.Reset();
             }
 
+            // Do not use AR Camera Manager projection matching
+            if (projectionMatrixSetter != null)
+                projectionMatrixSetter.StartMatchingProjection();
+
             // Turn off model view
             if (screenMode != null)
                 screenMode.SetActive(false);
@@ -217,6 +225,9 @@ namespace UnityEngine.Reflect.Extensions
 
                 HandleUI(false);
 
+                // Stop using AR Camera Manager projection matching
+                if (projectionMatrixSetter != null)
+                    projectionMatrixSetter.StopMatchingProjection();
                 // Turn model view back on
                 if (screenMode != null)
                     screenMode.SetActive(true);
