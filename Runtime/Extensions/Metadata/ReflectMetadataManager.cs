@@ -219,7 +219,7 @@ namespace UnityEngine.Reflect.Extensions
                                 }
                                 else if (thisRootParameter == kvp.Value.value)
                                 {
-                                    kvp.Key.NotifyObservers(meta.gameObject);
+                                    kvp.Key.NotifyObservers(meta.gameObject, thisRootParameter);
                                     if (kvp.Value.oneNotification)
                                         notifyRootCopy.Remove(kvp.Key); // So we do not notify again
                                 }
