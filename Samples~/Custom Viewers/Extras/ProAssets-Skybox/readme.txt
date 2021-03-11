@@ -1,2 +1,0 @@
-These assets are part of Free HDR Sky, daytime and sunset 4k HDR skyboxes with the community. Maps are set up as cubemap materials.
-Full assets pack available on Unity Asset Store here : https://assetstore.unity.com/packages/2d/textures-materials/sky/free-hdr-sky-61217

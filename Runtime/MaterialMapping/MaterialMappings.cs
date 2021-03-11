@@ -119,5 +119,26 @@ namespace UnityEngine.Reflect.Extensions.MaterialMapping
                              where item.remappedMaterial != null
                              select item).ToArray();
         }
+
+        /// <summary>
+        /// Compares Material Names and Mappings
+        /// </summary>
+        public static bool Match(string materialName, string mappingName, MatchType matchType = MatchType.A_Equals_B, bool matchCase = false)
+        {
+            if (materialName.Contains("SyncMaterial"))
+                materialName = materialName.Substring(10, materialName.Length - 23);
+
+            switch (matchType)
+            {
+                case MatchType.A_Equals_B:
+                    return matchCase ? materialName == mappingName : materialName.ToLower() == mappingName.ToLower();
+                case MatchType.A_Contains_B:
+                    return matchCase ? mappingName.Contains(materialName) : mappingName.ToLower().Contains(materialName.ToLower());
+                case MatchType.B_Contains_A:
+                    return matchCase ? materialName.Contains(mappingName) : materialName.ToLower().Contains(mappingName.ToLower());
+                default:
+                    return false;
+            }
+        }
     }
 }

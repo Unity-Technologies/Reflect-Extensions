@@ -1,11 +1,11 @@
 {
     "name": "Unity.Reflect.Extensions.Editor",
+    "rootNamespace": "",
     "references": [
         "Unity.Reflect",
         "Unity.Reflect.Editor",
         "Unity.Reflect.Extensions",
-        "Unity.XR.ARSubsystems",
-        "Unity.Addressables.Editor"
+        "Unity.Timeline"
     ],
     "includePlatforms": [
         "Editor"

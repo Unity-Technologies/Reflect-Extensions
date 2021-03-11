@@ -1,2 +1,0 @@
-These assets are part of the Standard Assets, a collection of assets, scripts, and example scenes can be used to kickstart your Unity learning or be used as the basis for your own projects.
-Full assets pack available on Unity Asset Store here : https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-for-unity-2017-3-32351

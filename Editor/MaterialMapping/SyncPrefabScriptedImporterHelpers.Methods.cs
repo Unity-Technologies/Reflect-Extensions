@@ -119,7 +119,7 @@ namespace UnityEditor.Reflect.Extensions.MaterialMapping
                     foreach (KeyValuePair<string, Material> kvp_m in materials)
                     {
                         foreach (string r in remapsNames)
-                            if (MaterialsOverride.Match(kvp_m.Key, r, ReflectEditorPreferences.materialSearchMatchType) && remaps[r] == null)
+                            if (MaterialMappings.Match(kvp_m.Key, r, ReflectEditorPreferences.materialSearchMatchType) && remaps[r] == null)
                                 remaps[r] = kvp_m.Value;
                     }
                     break;
