@@ -2,7 +2,9 @@
     "name": "Unity.Reflect.Extensions",
     "rootNamespace": "",
     "references": [
-        "GUID:6cf67fea318af2844a952982933563b0"
+        "GUID:6cf67fea318af2844a952982933563b0",
+        "GUID:f06555f75b070af458a003d92f9efb00",
+        "GUID:e513f6a23cbca864c817bd913d7b14f5"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

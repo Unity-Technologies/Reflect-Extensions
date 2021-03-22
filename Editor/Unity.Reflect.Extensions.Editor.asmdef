@@ -5,7 +5,8 @@
         "Unity.Reflect",
         "Unity.Reflect.Editor",
         "Unity.Reflect.Extensions",
-        "Unity.Timeline"
+        "Unity.Timeline",
+        "Unity.SunStudy"
     ],
     "includePlatforms": [
         "Editor"
