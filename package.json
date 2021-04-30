@@ -5,12 +5,12 @@
   "unity": "2020.3",
   "description": "Editor tools to make the most of Unity Reflect.",
   "author": {
-    "name": "Unity AEC Solutions Engineering Team",
-    "email": "aec@unity3d.com",
+    "name": "Unity Solutions Engineering Team",
+    "email": "solutions-engineering@unity3d.com",
     "url": "https://www.unity3d.com/aec"
   },
   "dependencies": {
-    "com.unity.reflect": "2.0.1-preview.13",
+    "com.unity.reflect": "2.1.0-preview.106",
     "com.unity.cinemachine": "2.6.3",
     "com.unity.timeline": "1.4.6"
   },
