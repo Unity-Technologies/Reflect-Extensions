@@ -58,8 +58,8 @@ namespace UnityEditor.Reflect.Extensions.Lightmapping
             List<Mesh> meshesToUpdate = new List<Mesh>();
             Dictionary<Mesh, Mesh> meshes = new Dictionary<Mesh, Mesh>();
             var meshFilters = includeChildren ?
-                Selection.GetFiltered<MeshFilter>(SelectionMode.OnlyUserModifiable | SelectionMode.Deep) :
-                Selection.GetFiltered<MeshFilter>(SelectionMode.OnlyUserModifiable);
+                Selection.GetFiltered<MeshFilter>(SelectionMode.Editable | SelectionMode.Deep) :
+                Selection.GetFiltered<MeshFilter>(SelectionMode.Editable);
 
             if (meshFilters.Length == 0)
                 return;
@@ -125,8 +125,8 @@ namespace UnityEditor.Reflect.Extensions.Lightmapping
         internal static void RevertSelectedMeshFilters(bool includeChildren = false)
         {
             var meshFilters = includeChildren ?
-                Selection.GetFiltered<MeshFilter>(SelectionMode.OnlyUserModifiable | SelectionMode.Deep) :
-                Selection.GetFiltered<MeshFilter>(SelectionMode.OnlyUserModifiable);
+                Selection.GetFiltered<MeshFilter>(SelectionMode.Editable | SelectionMode.Deep) :
+                Selection.GetFiltered<MeshFilter>(SelectionMode.Editable);
 
             if (meshFilters.Length == 0)
                 return;
