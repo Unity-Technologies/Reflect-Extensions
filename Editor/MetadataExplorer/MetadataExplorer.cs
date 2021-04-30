@@ -1,14 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using UnityEngine.Reflect;
-using UnityEditor.Reflect;
 using System;
 using System.Linq;
 using MenuItem = UnityEditor.MenuItem;
+using System.Text.RegularExpressions;
 
 // TODO : add instance counting
 // DONE : make it generic class to handle other Metadata such as PiXYZ, now part of com.unity.industrial.metadata
@@ -276,8 +275,10 @@ namespace Reflect.Extensions.Editor
 			keyList = new List<string>();
 			keyListView = new ListView(keyList, itemHeight, makeKeyItem, bindKeyItem);
 			keyListView.selectionType = SelectionType.Single;
-			keyListView.onItemChosen += KeyListView_onItemChosen;
-			keyListView.onSelectionChanged += KeyListView_onSelectionChanged;
+
+            keyListView.onItemsChosen += KeyListView_onItemsChosen;
+            keyListView.onSelectionChange += KeyListView_onSelectionChange;
+
 			keyListView.RegisterCallback<KeyUpEvent, ListView>(GoToLine, keyListView);
 			keyListView.style.flexGrow = 1.0f;
 			keyListBox.Add(keyListView);
@@ -293,7 +294,7 @@ namespace Reflect.Extensions.Editor
 			Action<VisualElement, int> bindValueItem = (e, i) => {
 				e.AddToClassList("md-value");
 				e.name = valueList[i];
-				if (searchField.value != string.Empty && e.name.Contains(searchField.value))
+				if (searchField.value != string.Empty && StringContains(e.name, searchField.value))
 					e.AddToClassList("highlight");
 				else
 					e.RemoveFromClassList("highlight");
@@ -303,8 +304,10 @@ namespace Reflect.Extensions.Editor
 			valueList = new List<string>();
 			valueListView = new ListView(valueList, itemHeight, makeValueItem, bindValueItem);
 			valueListView.selectionType = SelectionType.Multiple;
-			valueListView.onItemChosen += ValueListView_onItemChosen;
-			valueListView.onSelectionChanged += ValueListView_onSelectionChanged;
+
+			valueListView.onItemsChosen += ValueListView_onItemsChosen;
+            valueListView.onSelectionChange += ValueListView_onSelectionChange;
+
 			valueListView.RegisterCallback<KeyUpEvent, ListView>(GoToLine, valueListView);
 			valueListView.style.flexGrow = 1.0f;
 			valueListBox.Add(valueListView);
@@ -329,8 +332,9 @@ namespace Reflect.Extensions.Editor
 			favoriteList = new List<string>();
 			favoriteListView = new ListView(favoriteList, itemHeight, makeFavItem, bindFavItem);
 			favoriteListView.selectionType = SelectionType.Single;
-			favoriteListView.onItemChosen += FavoriteListView_onItemChosen;
-			//valueListView.onSelectionChanged += ValueListView_onSelectionChanged;
+
+			favoriteListView.onItemsChosen += FavoriteListView_onItemsChosen;
+
 			favoriteListView.style.flexGrow = 1.0f;
 			favoriteListBox.Add(favoriteListView);
 
@@ -360,9 +364,10 @@ namespace Reflect.Extensions.Editor
 			RefreshMetadata();
 		}
 
-		private void FavoriteListView_onItemChosen(object item)
-		{
-			var index = favoriteList.IndexOf(item.ToString());
+        private void FavoriteListView_onItemsChosen(IEnumerable<object> items)
+        {
+			// TODO : take advantage of the collection ?
+			var index = favoriteList.IndexOf(items.First().ToString());
 			SelectFavorite(favorites[index]);
 		}
 
@@ -484,15 +489,15 @@ namespace Reflect.Extensions.Editor
 			{
 				foreach (KeyValuePair<string, List<string>> kvp in keyValuePairs)
 				{
-					// searching in keys
-					if ((FilterType & FILTER_TYPE.Keys) == FILTER_TYPE.Keys && kvp.Key.Contains(searchField.value))
-						keyList.Add(kvp.Key);
+                    // searching in keys
+                    if ((FilterType & FILTER_TYPE.Keys) == FILTER_TYPE.Keys && StringContains(kvp.Key, searchField.value))
+                        keyList.Add(kvp.Key);
 
 					// searching in values
 					if ((FilterType & FILTER_TYPE.Values) == FILTER_TYPE.Values)
-					foreach (string v in kvp.Value)
-						if (v.Contains(searchField.value) && !keyList.Contains(kvp.Key))
-							keyList.Add(kvp.Key);
+						foreach (string v in kvp.Value)
+                            if (StringContains(v, searchField.value) && !keyList.Contains(kvp.Key)) // IGNORE CASE
+                                keyList.Add(kvp.Key);
 				}
 			}
 			keyList.Sort();
@@ -501,9 +506,15 @@ namespace Reflect.Extensions.Editor
 			selectedValues.Clear();
 		}
 
-		private void KeyListView_onSelectionChanged(List<object> newSelection)
+		private bool StringContains(string _string, string _value)
+        {
+			return Regex.IsMatch(_string, Regex.Escape(_value), RegexOptions.IgnoreCase);
+		}
+
+		private void KeyListView_onSelectionChange(IEnumerable<object> newSelection)
 		{
-			string k = newSelection[0].ToString();
+			// TODO : take advantage of the collection ?
+			string k = newSelection.First().ToString();
 			valueList.Clear();
 			valueList.AddRange(keyValuePairs[k]);
 			valueListView.Refresh();
@@ -522,14 +533,16 @@ namespace Reflect.Extensions.Editor
 			}//*/
 		}
 
-		private void KeyListView_onItemChosen(object item)
+		private void KeyListView_onItemsChosen(IEnumerable<object> items)
 		{
-			SelectObjects(item.ToString(), SelectType);
+			// TODO : take advantage of the collection ?
+			SelectObjects(items.First().ToString(), SelectType);
 		}
 
 		List<string> selectedValues = new List<string>();
-		private void ValueListView_onSelectionChanged(List<object> newSelection)
+		private void ValueListView_onSelectionChange(IEnumerable<object> newSelection)
 		{
+			// TODO : take advantage of the collection ?
 			selectedValues = new List<string>();
 			foreach (object o in newSelection)
 				selectedValues.Add(o.ToString());
@@ -538,9 +551,10 @@ namespace Reflect.Extensions.Editor
 			// FIXME : buttons won't be disabled if list is refreshed elsewhere
 		}
 
-		private void ValueListView_onItemChosen(object item)
+		private void ValueListView_onItemsChosen(IEnumerable<object> items)
 		{
-			SelectObjects(keyListView.selectedItem.ToString(), new List<string>() { item.ToString() }, SelectType);
+			// TODO : take advantage of the collection ?
+			SelectObjects(keyListView.selectedItem.ToString(), new List<string>() { items.First().ToString() }, SelectType);
 		}
 
 		private void SaveAsFavorite()
