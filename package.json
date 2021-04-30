@@ -3,7 +3,7 @@
   "displayName": "Reflect Extensions",
   "version": "2.0.0-preview.1",
   "unity": "2020.3",
-  "description": "Runtime components and Editor tools to make the most of Unity Reflect.",
+  "description": "Editor tools to make the most of Unity Reflect.",
   "author": {
     "name": "Unity AEC Solutions Engineering Team",
     "email": "aec@unity3d.com",
@@ -16,6 +16,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:Unity-Technologies/Reflect-Extensions.git#1.1.0-preview.1"
+    "url": "git@github.com:Unity-Technologies/Reflect-Extensions.git#2.0.0-preview.1"
   }
 }
