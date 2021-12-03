@@ -1,0 +1,12 @@
+Reflect Extensions Editor Material Extraction Workflow
+Extracting Meshes, Textures, and Materials using the Reflect Extensions Editor workflow
+
+1. If in HDRP, disable the Convert Extracted Materials setting in Edit -> Preferences -> Reflect Materials
+2. Also confirm the Auto Extract Materials on Import box is unchecked as we will be going through extracting materials manually and step by step.
+3. Import your Reflect project through the Reflect window.
+4. Find your imported project in the Reflect folder of the Project and then right click on the model asset to show a context menu and select Reflect -> Extract Materials and pick a folder of where to save the materials. This will automatically remap the extracted materials to your prefab. If you click off the model and then back on to the model (to redraw the Inspector) you will see your extracted materials remapped to the model.
+5. Click on your folder with the newly extracted materials. On the top menu bar, select Reflect -> Extract Sync Textures (from selected Materials), and then the texture files will be extracted and saved in a folder named Extracted Textures in the folder the materials are located. You now have access to the textures to duplicate, modify, etc.
+6. Drag your Reflect model with remapped materials into the scene. Right click on it and select Prefab -> Unpack Completely. Now drag the object back into your project and folder to make it a modifiable prefab.
+7. Select the menu item Reflect -> Lightmap UVs to open the Reflect Lightmap UVs window. Check the Include Children box. Select your prefab in your project. Click the Generate UVs on Selection in the Reflect Lightmaps UVs window. This will generate a folder named Lightmapping in the meshes folder in the Reflect project’s folder. You can move it and rename it if you like.
+8. Select the menu item Reflect -> Recalculate Normals and Tangents to open a Smooth Normals window and check the Include Children box. Now with your newly created folder of created meshes (called Lightmapping or whatever you renamed it to) selected, click the Smooth Selection button.
+9. You now have a prefab of your Reflect model with materials, textures and meshes that you can use, modify and configure to your liking.
